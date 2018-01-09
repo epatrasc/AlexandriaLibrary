@@ -1,16 +1,18 @@
 <resources>
-    <string name="app_name">AlexandriaLibrary</string>
+    <string name="app_name">Alexandria Library</string>
 
     <!-- Strings related to login -->
     <string name="prompt_utente">Utente</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Invia</string>
     <string name="action_sign_in_short">Login</string>
-    <string name="error_invalid_utente">Utente invalido</string>
+    <string name="error_invalid_utente">Valore utente troppo corto</string>
     <string name="error_invalid_password">Password troppo corta</string>
     <string name="error_incorrect_password">Password incorretta</string>
     <string name="error_field_required">Campo obbligatorio</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <item name="visible" type="id"/>
+    <item name="masked" type="id"/>
 </resources>

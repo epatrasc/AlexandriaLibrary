@@ -35,14 +35,9 @@ import java.util.List;
 import static android.Manifest.permission.READ_CONTACTS;
 
 /**
- * A login screen that offers login via email/password.
+ * A login screen that offers login via utente/password.
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
-
-    /**
-     * Id to identity READ_CONTACTS permission request.
-     */
-    private static final int REQUEST_READ_CONTACTS = 0;
 
     /**
      * A dummy authentication store containing known user names and passwords.
@@ -57,7 +52,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private UserLoginTask mAuthTask = null;
 
     // UI references.
-    private AutoCompleteTextView mEmailView;
+    private AutoCompleteTextView mUtenteView;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
@@ -67,7 +62,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.utente);
+        mUtenteView = (AutoCompleteTextView) findViewById(R.id.utente);
         populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.password);
@@ -82,8 +77,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.utente_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+        Button mUtenteSignInButton = (Button) findViewById(R.id.utente_sign_in_button);
+        mUtenteSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptLogin();
@@ -95,52 +90,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private void populateAutoComplete() {
-        if (!mayRequestContacts()) {
-            return;
-        }
-
         getLoaderManager().initLoader(0, null, this);
     }
 
-    private boolean mayRequestContacts() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new View.OnClickListener() {
-                        @Override
-                        @TargetApi(Build.VERSION_CODES.M)
-                        public void onClick(View v) {
-                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-                        }
-                    });
-        } else {
-            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-        }
-        return false;
-    }
-
-    /**
-     * Callback received when a permissions request has been completed.
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_READ_CONTACTS) {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                populateAutoComplete();
-            }
-        }
-    }
-
-
     /**
      * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
+     * If there are form errors (invalid utente, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
@@ -149,11 +104,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
         // Reset errors.
-        mEmailView.setError(null);
+        mUtenteView.setError(null);
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
+        String utente = mUtenteView.getText().toString();
         String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
@@ -166,14 +121,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             cancel = true;
         }
 
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
+        // Check for a valid utente
+        if (TextUtils.isEmpty(utente)) {
+            mUtenteView.setError(getString(R.string.error_field_required));
+            focusView = mUtenteView;
             cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_utente));
-            focusView = mEmailView;
+        } else if (!isUtenteValid(utente)) {
+            mUtenteView.setError(getString(R.string.error_invalid_utente));
+            focusView = mUtenteView;
             cancel = true;
         }
 
@@ -185,18 +140,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
+            mAuthTask = new UserLoginTask(utente, password);
             mAuthTask.execute((Void) null);
         }
     }
 
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
+    private boolean isUtenteValid(String utente) {
+        return utente.length() > 4;
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
         return password.length() > 4;
     }
 
@@ -243,26 +196,26 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI,
                         ContactsContract.Contacts.Data.CONTENT_DIRECTORY), ProfileQuery.PROJECTION,
 
-                // Select only email addresses.
+                // Select only utente addresses.
                 ContactsContract.Contacts.Data.MIMETYPE +
                         " = ?", new String[]{ContactsContract.CommonDataKinds.Email
                 .CONTENT_ITEM_TYPE},
 
-                // Show primary email addresses first. Note that there won't be
-                // a primary email address if the user hasn't specified one.
+                // Show primary utente addresses first. Note that there won't be
+                // a primary utente address if the user hasn't specified one.
                 ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        List<String> emails = new ArrayList<>();
+        List<String> utentes = new ArrayList<>();
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            emails.add(cursor.getString(ProfileQuery.ADDRESS));
+            utentes.add(cursor.getString(ProfileQuery.ADDRESS));
             cursor.moveToNext();
         }
 
-        addEmailsToAutoComplete(emails);
+        addUtentesToAutoComplete(utentes);
     }
 
     @Override
@@ -270,13 +223,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     }
 
-    private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
+    private void addUtentesToAutoComplete(List<String> utenteAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         ArrayAdapter<String> adapter =
                 new ArrayAdapter<>(LoginActivity.this,
-                        android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
+                        android.R.layout.simple_dropdown_item_1line, utenteAddressCollection);
 
-        mEmailView.setAdapter(adapter);
+        mUtenteView.setAdapter(adapter);
     }
 
 
@@ -296,11 +249,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String mEmail;
+        private final String mUtente;
         private final String mPassword;
 
-        UserLoginTask(String email, String password) {
-            mEmail = email;
+        UserLoginTask(String utente, String password) {
+            mUtente = utente;
             mPassword = password;
         }
 
@@ -317,7 +270,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             for (String credential : DUMMY_CREDENTIALS) {
                 String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
+                if (pieces[0].equals(mUtente)) {
                     // Account exists, return true if the password matches.
                     return pieces[1].equals(mPassword);
                 }
