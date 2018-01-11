@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
@@ -142,6 +143,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
+    public void loginSuccess() {
+        Intent intent = new Intent(this, MostraCatalogo.class);
+        startActivity(intent);
+    }
+    //
     private boolean isUtenteValid(String utente) {
         return utente.length() > 4;
     }
@@ -298,7 +304,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (statusResponse != null && statusResponse.isDone()) {
-                finish();
+                Log.d("LOGIN","Login avvenuto con successo");
+                loginSuccess();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
