@@ -3,22 +3,18 @@ package com.alexandria.android.alexandrialibrary;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
-
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
-
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,23 +25,24 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.alexandria.android.alexandrialibrary.model.StatusResponse;
+import com.google.gson.Gson;
+
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.Manifest.permission.READ_CONTACTS;
 
 /**
  * A login screen that offers login via utente/password.
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -90,7 +87,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private void populateAutoComplete() {
-        getLoaderManager().initLoader(0, null, this);
+        //getLoaderManager().initLoader(0, null, this);
     }
 
     /**
@@ -247,7 +244,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    public class UserLoginTask extends AsyncTask<Void, Void, StatusResponse> {
 
         private final String mUtente;
         private final String mPassword;
@@ -258,34 +255,49 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
+        protected StatusResponse doInBackground(Void... params) {
+            URL url = null;
+            HttpURLConnection urlConnection = null;
+            Gson gson = new Gson();
 
             try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
+                url = new URL(getString(R.string.upstream_base_url) + "login?nome=alessandro&password=alessandro&isAndroid=true");
+                urlConnection = (HttpURLConnection) url.openConnection();
+                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+                String json = readStream(in);
+                Log.d("LOGIN", json);
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mUtente)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
+                return gson.fromJson(json, StatusResponse.class);
+
+            } catch (MalformedURLException ex) {
+                return null;
+            } catch (IOException ex) {
+                return null;
+            } finally {
+                urlConnection.disconnect();
+            }
+        }
+
+        private String readStream(InputStream is) {
+            try {
+                ByteArrayOutputStream bo = new ByteArrayOutputStream();
+                int i = is.read();
+                while (i != -1) {
+                    bo.write(i);
+                    i = is.read();
                 }
+                return bo.toString();
+            } catch (IOException e) {
+                return "";
             }
-
-            // TODO: register the new account here.
-            return true;
         }
 
         @Override
-        protected void onPostExecute(final Boolean success) {
+        protected void onPostExecute(final StatusResponse statusResponse) {
             mAuthTask = null;
             showProgress(false);
 
-            if (success) {
+            if (statusResponse != null && statusResponse.isDone()) {
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
