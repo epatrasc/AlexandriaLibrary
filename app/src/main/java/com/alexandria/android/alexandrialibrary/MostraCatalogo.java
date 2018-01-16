@@ -8,6 +8,6 @@ public class MostraCatalogo extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.content_item_book);
+        setContentView(R.layout.list_single_row);
     }
 }
