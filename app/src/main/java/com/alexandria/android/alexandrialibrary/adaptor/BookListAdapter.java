@@ -39,11 +39,13 @@ public class BookListAdapter extends ArrayAdapter<String> {
 
         ImageView imageView =(ImageView) rowView.findViewById(R.id.icon);
 
-        TextView txtTitle = (TextView) rowView.findViewById(R.id.item);
-        TextView extratxt = (TextView) rowView.findViewById(R.id.textView1);
+        TextView txtTitle = (TextView) rowView.findViewById(R.id.list_book_title);
+        TextView txtAutori = (TextView) rowView.findViewById(R.id.list_book_autori);
+        TextView txtEditore = (TextView) rowView.findViewById(R.id.list_book_editore);
 
         txtTitle.setText(itemname[position]);
-        extratxt.setText("Description "+itemname[position]);
+        txtAutori.setText(itemname[position]);
+        txtEditore.setText("Editore: Feltrinelli");
         LoadImageAsyncTask loadImage = new LoadImageAsyncTask(imageView);
         loadImage.execute();
         return rowView;

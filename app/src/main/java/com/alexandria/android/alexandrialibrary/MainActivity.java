@@ -21,13 +21,13 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     String[] itemname = {
-            "Safari",
-            "Camera",
-            "Global",
-            "FireFox",
-            "UC Browser",
-            "Android Folder",
-            "VLC Player",
+            "1984",
+            "Hamlet",
+            "Macbeth",
+            "Dracula",
+            "Othello",
+            "The Hunger Games (The Hunger Games, #1)",
+            "A Game of Thrones (A Song of Ice and Fire, #1))",
             "Cold War"
     };
 

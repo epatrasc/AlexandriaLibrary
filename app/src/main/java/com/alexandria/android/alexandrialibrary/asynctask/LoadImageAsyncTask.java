@@ -28,7 +28,7 @@ public class LoadImageAsyncTask extends AsyncTask<String, Void, Bitmap> {
         System.out.println(urlImage);
 
         try {
-            url = new URL("http://lorempixel.com/400/400/sports/");
+            url = new URL("http://via.placeholder.com/400x400");
 
             bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
             imageView.setImageBitmap(bitmap);
