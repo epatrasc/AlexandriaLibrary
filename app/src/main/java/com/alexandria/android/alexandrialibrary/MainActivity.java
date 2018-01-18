@@ -19,7 +19,7 @@ import com.alexandria.android.alexandrialibrary.adaptor.BookListAdapter;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
+    ListView bookView = null;
     String[] itemname = {
             "1984",
             "Hamlet",
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         BookListAdapter adapter=new BookListAdapter(this, itemname);
-        ListView bookView = (ListView) this.findViewById(R.id.book_list);
+        bookView = (ListView) this.findViewById(R.id.book_list);
         bookView.setAdapter(adapter);
 
         bookView.setOnItemClickListener(new OnItemClickListener() {
@@ -112,5 +112,12 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        bookView.setAdapter(null);
+        super.onDestroy();
     }
 }

@@ -1,9 +1,7 @@
 package com.alexandria.android.alexandrialibrary.adaptor;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,16 +11,15 @@ import android.widget.TextView;
 
 import com.alexandria.android.alexandrialibrary.R;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import com.alexandria.android.alexandrialibrary.asynctask.LoadImageAsyncTask;
+import com.alexandria.android.alexandrialibrary.asynctask.ImageLoader;
 
 public class BookListAdapter extends ArrayAdapter<String> {
 
     private final Activity context;
     private final String[] itemname;
-    private final Integer[] imgid;
+    private final String[] urls;
+    private static LayoutInflater inflater=null;
+    public ImageLoader imageLoader;
 
     public BookListAdapter(Activity context, String[] itemname) {
         super(context, R.layout.my_list, itemname);
@@ -30,12 +27,16 @@ public class BookListAdapter extends ArrayAdapter<String> {
 
         this.context=context;
         this.itemname=itemname;
-        this.imgid=null;//imgid;
+        this.urls= new String[itemname.length];//imgid;
+        this.inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.imageLoader=new ImageLoader(context.getApplicationContext());
     }
 
     public View getView(int position,View view,ViewGroup parent) {
-        LayoutInflater inflater=context.getLayoutInflater();
-        View rowView=inflater.inflate(R.layout.my_list, null,true);
+        View rowView = view;
+
+        if(view==null)
+            rowView=inflater.inflate(R.layout.my_list, null,true);
 
         ImageView imageView =(ImageView) rowView.findViewById(R.id.icon);
 
@@ -46,9 +47,17 @@ public class BookListAdapter extends ArrayAdapter<String> {
         txtTitle.setText(itemname[position]);
         txtAutori.setText(itemname[position]);
         txtEditore.setText("Editore: Feltrinelli");
-        LoadImageAsyncTask loadImage = new LoadImageAsyncTask(imageView);
-        loadImage.execute();
+        //imageLoader.DisplayImage(itemname[position], imageView);
+        imageLoader.DisplayImage("http://via.placeholder.com/400x400", imageView);
         return rowView;
 
     };
+
+    public int getCount() {
+        return urls.length;
+    }
+
+    public long getItemId(int position) {
+        return position;
+    }
 }
