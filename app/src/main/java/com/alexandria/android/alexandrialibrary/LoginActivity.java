@@ -144,7 +144,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     public void loginSuccess() {
-        Intent intent = new Intent(this, MostraCatalogo.class);
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
     //
