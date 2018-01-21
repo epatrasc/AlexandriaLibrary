@@ -31,7 +31,7 @@ public class BookListAdapter extends ArrayAdapter<Libro> {
     public ImageLoaderTask imageLoader;
 
     public BookListAdapter(Activity context, List<Libro> libri) {
-        super(context, R.layout.my_list, libri);
+        super(context, R.layout.catalogo_list, libri);
 
         this.context = context;
         this.libri = libri;
@@ -44,7 +44,7 @@ public class BookListAdapter extends ArrayAdapter<Libro> {
         View rowView = view;
 
         if (view == null)
-            rowView = inflater.inflate(R.layout.my_list, null, true);
+            rowView = inflater.inflate(R.layout.catalogo_list, null, true);
 
         ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
 

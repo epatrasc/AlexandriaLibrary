@@ -5,6 +5,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,6 +25,7 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.alexandria.android.alexandrialibrary.asynctask.CatalogoLibriTask;
+import com.google.gson.Gson;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -53,6 +56,19 @@ public class MainActivity extends AppCompatActivity
 
         askPermission(this);
         showProgress(true);
+
+        //nav menu
+        Menu menu = navigationView.getMenu();
+        MenuItem  itemPrestiti = menu.findItem(R.id.nav_prestiti);
+        itemPrestiti.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent intent = new Intent(getApplicationContext(), PrestitiActivity.class);
+                intent.putExtra("idUtente", "1"); // TODO implementare utente
+                startActivity(intent);
+                return true;
+            }
+        });
 
         // prepara catalogo
         CatalogoLibriTask catalogoLibriTask = new CatalogoLibriTask(this);
