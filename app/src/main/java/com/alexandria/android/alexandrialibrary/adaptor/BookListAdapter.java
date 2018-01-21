@@ -12,46 +12,53 @@ import android.widget.TextView;
 import com.alexandria.android.alexandrialibrary.R;
 
 import com.alexandria.android.alexandrialibrary.asynctask.ImageLoader;
+import com.alexandria.android.alexandrialibrary.model.Libro;
 
-public class BookListAdapter extends ArrayAdapter<String> {
+import java.util.ArrayList;
+import java.util.List;
+
+public class BookListAdapter extends ArrayAdapter<Libro> {
 
     private final Activity context;
-    private final String[] itemname;
     private final String[] urls;
-    private static LayoutInflater inflater=null;
+    private static LayoutInflater inflater = null;
+    private List<Libro> libri = new ArrayList<>();
     public ImageLoader imageLoader;
 
-    public BookListAdapter(Activity context, String[] itemname) {
-        super(context, R.layout.my_list, itemname);
-        // TODO Auto-generated constructor stub
+    public BookListAdapter(Activity context, List<Libro> libri) {
+        super(context, R.layout.my_list, libri);
 
-        this.context=context;
-        this.itemname=itemname;
-        this.urls= new String[itemname.length];//imgid;
-        this.inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.imageLoader=new ImageLoader(context.getApplicationContext());
+        this.context = context;
+        this.libri = libri;
+        this.urls = new String[libri.size()];
+        this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.imageLoader = new ImageLoader(context.getApplicationContext());
     }
 
-    public View getView(int position,View view,ViewGroup parent) {
+    public View getView(int position, View view, ViewGroup parent) {
         View rowView = view;
 
-        if(view==null)
-            rowView=inflater.inflate(R.layout.my_list, null,true);
+        if (view == null)
+            rowView = inflater.inflate(R.layout.my_list, null, true);
 
-        ImageView imageView =(ImageView) rowView.findViewById(R.id.icon);
+        ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
 
         TextView txtTitle = (TextView) rowView.findViewById(R.id.list_book_title);
         TextView txtAutori = (TextView) rowView.findViewById(R.id.list_book_autori);
         TextView txtEditore = (TextView) rowView.findViewById(R.id.list_book_editore);
 
-        txtTitle.setText(itemname[position]);
-        txtAutori.setText(itemname[position]);
-        txtEditore.setText("Editore: Feltrinelli");
-        //imageLoader.DisplayImage(itemname[position], imageView);
-        imageLoader.DisplayImage("http://via.placeholder.com/400x400", imageView);
-        return rowView;
+        Libro libro = libri.get(position);
 
-    };
+        txtTitle.setText(libro.getTitolo());
+        txtAutori.setText(libro.getAutori());
+        txtEditore.setText(libro.getEditore());
+
+        imageLoader.DisplayImage(libro.getImageUrl(), imageView);
+
+        return rowView;
+    }
+
+    ;
 
     public int getCount() {
         return urls.length;

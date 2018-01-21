@@ -1,4 +1,4 @@
-package com.alexandria.android.alexandrialibrary.helpers;
+package com.alexandria.android.alexandrialibrary.helper;
 
 import java.io.File;
 import android.content.Context;
@@ -18,6 +18,8 @@ public class FileCache {
     }
 
     public File getFile(String url){
+        if(!cacheDir.exists())
+            cacheDir.mkdirs();
         //I identify images by hashcode. Not a perfect solution, good for the demo.
         String filename=String.valueOf(url.hashCode());
         //Another possible solution (thanks to grantland)

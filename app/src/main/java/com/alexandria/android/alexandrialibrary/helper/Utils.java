@@ -1,4 +1,4 @@
-package com.alexandria.android.alexandrialibrary.helpers;
+package com.alexandria.android.alexandrialibrary.helper;
 
 import java.io.InputStream;
 import java.io.OutputStream;

@@ -4,24 +4,20 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.view.View;
 import android.widget.ImageView;
 
 import com.alexandria.android.alexandrialibrary.R;
-import com.alexandria.android.alexandrialibrary.helpers.FileCache;
-import com.alexandria.android.alexandrialibrary.helpers.MemoryCache;
-import com.alexandria.android.alexandrialibrary.helpers.Utils;
+import com.alexandria.android.alexandrialibrary.helper.FileCache;
+import com.alexandria.android.alexandrialibrary.helper.MemoryCache;
+import com.alexandria.android.alexandrialibrary.helper.Utils;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Map;

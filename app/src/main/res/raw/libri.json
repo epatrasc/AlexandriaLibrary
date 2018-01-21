@@ -1,0 +1,65 @@
+[ {
+  "id" : 1,
+  "titolo" : "Alices adventures in Wonderland ",
+  "descrizione" : "A little girl falls down a rabbit hole and discovers a world of nonsensical and amusing characters.",
+  "imageUrl" : "http://covers.openlibrary.org/b/OLID/OL1396620M-M.jpg",
+  "autori" : "Lewis Carroll",
+  "editore" : "Dover",
+  "disponibile" : true
+}, {
+  "id" : 2,
+  "titolo" : "Harry Potter and the Prisoner of Azkaban",
+  "descrizione" : "During his third year at Hogwarts School for Witchcraft and Wizardry, Harry Potter must confront the devious and dangerous wizard responsible for his parents deaths.",
+  "imageUrl" : "http://covers.openlibrary.org/b/OLID/OL47724M-M.jpg",
+  "autori" : "Joanne Rowling",
+  "editore" : "Thorndike Press",
+  "disponibile" : true
+}, {
+  "id" : 3,
+  "titolo" : "The Count of Monte Cristo ",
+  "descrizione" : "This is the description of the book The Count of Monte Cristo ",
+  "imageUrl" : "http://covers.openlibrary.org/b/OLID/OL3433046M-M.jpg",
+  "autori" : "Alexandre Dumas",
+  "editore" : "Pocket Books",
+  "disponibile" : false
+}, {
+  "id" : 4,
+  "titolo" : "Foucaults Pendulum ",
+  "descrizione" : "Table of Contents KETER 1. When the light of the infinite 2. Wee haue divers curious Clocks…",
+  "imageUrl" : "http://covers.openlibrary.org/b/OLID/OL22774807M-M.jpg",
+  "autori" : "Umberto Eco",
+  "editore" : "Balllantine Books",
+  "disponibile" : false
+}, {
+  "id" : 5,
+  "titolo" : "The Wizard of Oz ",
+  "descrizione" : "After a cyclone transports her to the land of Oz, Dorothy must seek out the great wizard in order to return to Kansas.",
+  "imageUrl" : "http://covers.openlibrary.org/b/OLID/OL2400084M-M.jpg",
+  "autori" : "L. Frank Baum",
+  "editore" : "Unicorn Pub. House",
+  "disponibile" : false
+}, {
+  "id" : 6,
+  "titolo" : "Moby Dick ",
+  "descrizione" : "In comic strip format.",
+  "imageUrl" : "http://covers.openlibrary.org/b/OLID/OL24981832M-M.jpg",
+  "autori" : "Herman Melville",
+  "editore" : "Academic Industries",
+  "disponibile" : true
+}, {
+  "id" : 7,
+  "titolo" : "The walking dead",
+  "descrizione" : "In onda negli Stati Uniti e sulle reti di oltre cento paesi nel mondo dal 2010, The Walking Dead si è imposto, negli anni, come uno dei casi televisivi di maggiore successo a livello globale, generando, allo stesso tempo, un vasto e variegato fenomeno di fandom e di culto.",
+  "imageUrl" : "http://mimesisedizioni.it/media/catalog/product/cache/1/thumbnail/9df78eab33525d08d6e5fb8d27136e95/n/a/narrazioni-seriali-holdaway-walking-dead-1.jpg",
+  "autori" : "Massimo Scaglioni, Dom Holdaway",
+  "editore" : "Mimesis Edizioni",
+  "disponibile" : true
+}, {
+  "id" : 8,
+  "titolo" : "Questo e' un libro",
+  "descrizione" : "    \t    \t    \t    \t    \tQuesto ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¨ un libro con i fumetti di Sio\n    \n    \n    \n    \n    ",
+  "imageUrl" : "http://d17iy7lmt1qoyv.cloudfront.net/app/uploads/2017/12/08153413/83761092-021a-4be5-9b10-6dd8650d3b71.jpg",
+  "autori" : "Simone Sio",
+  "editore" : "Shockdom",
+  "disponibile" : false
+} ]

@@ -1,4 +1,4 @@
-package com.alexandria.android.alexandrialibrary.helpers;
+package com.alexandria.android.alexandrialibrary.helper;
 
 import java.util.Collections;
 import java.util.Iterator;
