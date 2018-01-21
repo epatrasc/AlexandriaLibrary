@@ -6,12 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alexandria.android.alexandrialibrary.R;
 
-import com.alexandria.android.alexandrialibrary.asynctask.ImageLoader;
+import com.alexandria.android.alexandrialibrary.asynctask.ImageLoaderTask;
+import com.alexandria.android.alexandrialibrary.asynctask.PrestitoTask;
 import com.alexandria.android.alexandrialibrary.model.Libro;
 
 import java.util.ArrayList;
@@ -23,7 +25,7 @@ public class BookListAdapter extends ArrayAdapter<Libro> {
     private final String[] urls;
     private static LayoutInflater inflater = null;
     private List<Libro> libri = new ArrayList<>();
-    public ImageLoader imageLoader;
+    public ImageLoaderTask imageLoader;
 
     public BookListAdapter(Activity context, List<Libro> libri) {
         super(context, R.layout.my_list, libri);
@@ -32,10 +34,10 @@ public class BookListAdapter extends ArrayAdapter<Libro> {
         this.libri = libri;
         this.urls = new String[libri.size()];
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.imageLoader = new ImageLoader(context.getApplicationContext());
+        this.imageLoader = new ImageLoaderTask(context.getApplicationContext());
     }
 
-    public View getView(int position, View view, ViewGroup parent) {
+    public View getView(final int position, View view, ViewGroup parent) {
         View rowView = view;
 
         if (view == null)
@@ -54,6 +56,19 @@ public class BookListAdapter extends ArrayAdapter<Libro> {
         txtEditore.setText(libro.getEditore());
 
         imageLoader.DisplayImage(libro.getImageUrl(), imageView);
+
+        // presta button
+        Button prestaButton = rowView.findViewById(R.id.presta_button);
+
+        prestaButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Libro libro = libri.get(position);
+                int idLibro = libro.getId();
+                int idUtente = 1; // TODO retrieve utente
+                PrestitoTask task = new PrestitoTask(view.getContext(), idLibro, idUtente);
+                task.execute();
+            }
+        });
 
         return rowView;
     }

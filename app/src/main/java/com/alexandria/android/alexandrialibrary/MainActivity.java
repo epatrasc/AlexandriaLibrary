@@ -5,9 +5,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Context;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -21,24 +19,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.alexandria.android.alexandrialibrary.adaptor.BookListAdapter;
-import com.alexandria.android.alexandrialibrary.model.Libro;
-import com.alexandria.android.alexandrialibrary.service.CatalogoLibriService;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.alexandria.android.alexandrialibrary.asynctask.CatalogoLibriTask;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    ListView bookView = null;
-    List<Libro> catalogoLibri = new ArrayList<>();
     private View mProgressView;
-    private CatalogoLibriTask catalogoLibriTask;
+    private ListView bookView = null;
+
     private Integer MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = PackageManager.PERMISSION_GRANTED;
 
     @Override
@@ -63,7 +53,9 @@ public class MainActivity extends AppCompatActivity
 
         askPermission(this);
         showProgress(true);
-        catalogoLibriTask = new CatalogoLibriTask(this);
+
+        // prepara catalogo
+        CatalogoLibriTask catalogoLibriTask = new CatalogoLibriTask(this);
         catalogoLibriTask.execute();
     }
 
@@ -71,7 +63,7 @@ public class MainActivity extends AppCompatActivity
      * Shows the progress UI and hides the login form.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    private void showProgress(final boolean show) {
+    public void showProgress(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.
@@ -214,52 +206,11 @@ public class MainActivity extends AppCompatActivity
         super.onDestroy();
     }
 
-    public class CatalogoLibriTask extends AsyncTask<Void, Void, List<Libro>> {
-        private Activity activitiy;
+    public ListView getBookView() {
+        return bookView;
+    }
 
-        public CatalogoLibriTask(Activity activitiy){
-            this.activitiy = activitiy;
-        }
-
-        @Override
-        protected List<Libro> doInBackground(Void... params) {
-            CatalogoLibriService service = new CatalogoLibriService();
-
-            return service.getLibri(activitiy.getApplicationContext());
-        }
-
-        @Override
-        protected void onPostExecute(final List<Libro> libri) {
-            catalogoLibriTask = null;
-            catalogoLibri = libri;
-
-            showProgress(false);
-
-            if (libri != null && libri.size()>0) {
-                BookListAdapter adapter = new BookListAdapter(activitiy, catalogoLibri);
-
-                bookView.setAdapter(adapter);
-
-                bookView.setOnItemClickListener(new OnItemClickListener() {
-
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view,
-                                            int position, long id) {
-                        Libro libro = catalogoLibri.get(+position);
-                        Toast.makeText(getApplicationContext(), libro.getTitolo(), Toast.LENGTH_SHORT).show();
-
-                    }
-                });
-            } else {
-                onCancelled();
-                // TODO visualizza messaggio catalogo vuoto
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            catalogoLibriTask = null;
-            showProgress(false);
-        }
+    public void setBookView(ListView bookView) {
+        this.bookView = bookView;
     }
 }

@@ -25,7 +25,7 @@ import java.util.WeakHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ImageLoader {
+public class ImageLoaderTask {
     MemoryCache memoryCache=new MemoryCache();
     FileCache fileCache;
     private Map<ImageView, String> imageViews= Collections.synchronizedMap(new WeakHashMap<ImageView, String>());
@@ -33,7 +33,7 @@ public class ImageLoader {
 
     private String path;
 
-    public ImageLoader(Context context) {
+    public ImageLoaderTask(Context context) {
         fileCache=new FileCache(context);
         executorService= Executors.newFixedThreadPool(5);
     }
