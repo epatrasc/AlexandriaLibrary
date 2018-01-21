@@ -8,20 +8,30 @@ import android.widget.Toast;
 import com.alexandria.android.alexandrialibrary.MainActivity;
 import com.alexandria.android.alexandrialibrary.service.PrestitoService;
 
-public class PrestitoTask extends AsyncTask<Void, Void, Boolean> {
+public class PrestitoTask extends AsyncTask<String, Void, Boolean> {
     private Context context;
     private int idLibro;
     private int idUtente;
+    private PrestitoService service = null;
+
+    public static final String ACTION_PRESTA = "presta";
+    public static final String ACTION_RESTITUISCI = "restituisci";
+
+    public PrestitoTask(Context context,int idLibro) {
+        this.context = context;
+        this.idLibro = idLibro;
+        this.service  = new PrestitoService();
+    }
 
     public PrestitoTask(Context context,int idLibro,int idUtente) {
         this.context = context;
         this.idLibro = idLibro;
         this.idUtente = idUtente;
+        this.service  = new PrestitoService();
     }
 
     @Override
-    protected Boolean doInBackground(Void... params) {
-        PrestitoService service = new PrestitoService();
+    protected Boolean doInBackground(String... params) {
         try{
 
             Thread.sleep(2000);
@@ -29,7 +39,12 @@ public class PrestitoTask extends AsyncTask<Void, Void, Boolean> {
             Log.d("task", "doInBackground: sleep error");
         }
 
-        return service.presta();
+        if(params!=null &&  params[0].equals(ACTION_PRESTA)){
+                return service.presta(idLibro, idUtente);
+        }
+
+        return service.restituisci(idLibro);
+
     }
 
     @Override

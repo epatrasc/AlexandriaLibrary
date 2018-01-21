@@ -69,7 +69,7 @@ public class BookListAdapter extends ArrayAdapter<Libro> {
                 int idLibro = libro.getId();
                 int idUtente = 1; // TODO retrieve utente
                 PrestitoTask task = new PrestitoTask(view.getContext(), idLibro, idUtente);
-                task.execute();
+                task.execute(PrestitoTask.ACTION_PRESTA);
             }
         });
 

@@ -1,0 +1,115 @@
+[ {
+  "idUtente" : 1,
+  "idLibro" : 8,
+  "dataPrestito" : 1515888000000,
+  "dataRestituzione" : null,
+  "restituito" : false
+}, {
+  "idUtente" : 1,
+  "idLibro" : 3,
+  "dataPrestito" : 1515801600000,
+  "dataRestituzione" : null,
+  "restituito" : false
+}, {
+  "idUtente" : 1,
+  "idLibro" : 5,
+  "dataPrestito" : 1515283200000,
+  "dataRestituzione" : null,
+  "restituito" : false
+}, {
+  "idUtente" : 3,
+  "idLibro" : 4,
+  "dataPrestito" : 1515110400000,
+  "dataRestituzione" : null,
+  "restituito" : false
+}, {
+  "idUtente" : 1,
+  "idLibro" : 1,
+  "dataPrestito" : 1515196800000,
+  "dataRestituzione" : 1515196800000,
+  "restituito" : true
+}, {
+  "idUtente" : 1,
+  "idLibro" : 1,
+  "dataPrestito" : 1515024000000,
+  "dataRestituzione" : 1515196800000,
+  "restituito" : true
+}, {
+  "idUtente" : 1,
+  "idLibro" : 1,
+  "dataPrestito" : 1512000000000,
+  "dataRestituzione" : 1515196800000,
+  "restituito" : true
+}, {
+  "idUtente" : 1,
+  "idLibro" : 2,
+  "dataPrestito" : 1512086400000,
+  "dataRestituzione" : 1515283200000,
+  "restituito" : true
+}, {
+  "idUtente" : 1,
+  "idLibro" : 2,
+  "dataPrestito" : 1515283200000,
+  "dataRestituzione" : 1515283200000,
+  "restituito" : true
+}, {
+  "idUtente" : 1,
+  "idLibro" : 1,
+  "dataPrestito" : 1515283200000,
+  "dataRestituzione" : 1515283200000,
+  "restituito" : true
+}, {
+  "idUtente" : 1,
+  "idLibro" : 3,
+  "dataPrestito" : 1515024000000,
+  "dataRestituzione" : 1515283200000,
+  "restituito" : true
+}, {
+  "idUtente" : 3,
+  "idLibro" : 9,
+  "dataPrestito" : 1515110400000,
+  "dataRestituzione" : 1515283200000,
+  "restituito" : true
+}, {
+  "idUtente" : 1,
+  "idLibro" : 2,
+  "dataPrestito" : 1515283200000,
+  "dataRestituzione" : 1515801600000,
+  "restituito" : true
+}, {
+  "idUtente" : 1,
+  "idLibro" : 1,
+  "dataPrestito" : 1515801600000,
+  "dataRestituzione" : 1515888000000,
+  "restituito" : true
+}, {
+  "idUtente" : 1,
+  "idLibro" : 1,
+  "dataPrestito" : 1515888000000,
+  "dataRestituzione" : 1515888000000,
+  "restituito" : true
+}, {
+  "idUtente" : 1,
+  "idLibro" : 1,
+  "dataPrestito" : 1515888000000,
+  "dataRestituzione" : 1515888000000,
+  "restituito" : true
+}, {
+  "idUtente" : 1,
+  "idLibro" : 1,
+  "dataPrestito" : 1515888000000,
+  "dataRestituzione" : 1515888000000,
+  "restituito" : true
+}, {
+  "idUtente" : 1,
+  "idLibro" : 2,
+  "dataPrestito" : 1515801600000,
+  "dataRestituzione" : 1515888000000,
+  "restituito" : true
+}, {
+  "idUtente" : 3,
+  "idLibro" : 8,
+  "dataPrestito" : 1515110400000,
+  "dataRestituzione" : 1515888000000,
+  "restituito" : true
+} ]
