@@ -28,7 +28,7 @@
 
                 <TextView
                     android:id="@+id/prestiti_list_label_utente"
-                    android:layout_width="88dp"
+                    android:layout_width="124dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="1"
@@ -57,7 +57,7 @@
 
                 <TextView
                     android:id="@+id/prestiti_list_label_data_prestito"
-                    android:layout_width="88dp"
+                    android:layout_width="124dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="1"
@@ -87,7 +87,7 @@
 
                 <TextView
                     android:id="@+id/prestiti_list_label_data_restituzione"
-                    android:layout_width="88dp"
+                    android:layout_width="124dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="1"
@@ -116,7 +116,7 @@
 
                 <TextView
                     android:id="@+id/prestiti_list_label_stato"
-                    android:layout_width="88dp"
+                    android:layout_width="124dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="1"
