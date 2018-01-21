@@ -2,6 +2,7 @@ package com.alexandria.android.alexandrialibrary.adaptor;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +11,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alexandria.android.alexandrialibrary.BookDetailActivity;
 import com.alexandria.android.alexandrialibrary.R;
 
 import com.alexandria.android.alexandrialibrary.asynctask.ImageLoaderTask;
 import com.alexandria.android.alexandrialibrary.asynctask.PrestitoTask;
 import com.alexandria.android.alexandrialibrary.model.Libro;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +70,18 @@ public class BookListAdapter extends ArrayAdapter<Libro> {
                 int idUtente = 1; // TODO retrieve utente
                 PrestitoTask task = new PrestitoTask(view.getContext(), idLibro, idUtente);
                 task.execute();
+            }
+        });
+
+        // detail button
+        Button detailButton = rowView.findViewById(R.id.detail_button);
+
+        detailButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Libro libro = libri.get(position);
+                Intent intent = new Intent(context, BookDetailActivity.class);
+                intent.putExtra("libro", new Gson().toJson(libro));
+                context.startActivity(intent);
             }
         });
 
