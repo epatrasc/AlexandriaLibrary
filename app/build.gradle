@@ -29,4 +29,5 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.2'
     compile 'com.koushikdutta.ion:ion:2.2.1'
     android{ useLibrary  'org.apache.http.legacy'}
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'
 }

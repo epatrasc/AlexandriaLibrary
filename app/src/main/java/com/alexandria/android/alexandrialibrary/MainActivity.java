@@ -5,7 +5,9 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,21 +18,30 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.alexandria.android.alexandrialibrary.asynctask.CatalogoLibriTask;
+import com.alexandria.android.alexandrialibrary.helper.HTTPClients;
+import com.alexandria.android.alexandrialibrary.model.Utente;
 import com.google.gson.Gson;
+import com.koushikdutta.ion.Ion;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private View mProgressView;
     private ListView bookView = null;
+    private Utente utente;
 
     private Integer MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = PackageManager.PERMISSION_GRANTED;
 
@@ -54,25 +65,45 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        SharedPreferences prefs = getSharedPreferences(getString(R.string.app_share_base), Context.MODE_PRIVATE);
+        utente = new Gson().fromJson(prefs.getString(getString(R.string.shared_preferences_utente),null),Utente.class);
+
+        View headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_main);
+
+        TextView navUtete = headerLayout.findViewById(R.id.nav_header_utente_label);
+        navUtete.setText(String.format("%s (%s)", StringUtils.capitalize(utente.getNome()), StringUtils.capitalize(utente.getRuolo())));
+
         askPermission(this);
         showProgress(true);
-
-        //nav menu
-        Menu menu = navigationView.getMenu();
-        MenuItem  itemPrestiti = menu.findItem(R.id.nav_prestiti);
-        itemPrestiti.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                Intent intent = new Intent(getApplicationContext(), PrestitiActivity.class);
-                intent.putExtra("idUtente", "1"); // TODO implementare utente
-                startActivity(intent);
-                return true;
-            }
-        });
 
         // prepara catalogo
         CatalogoLibriTask catalogoLibriTask = new CatalogoLibriTask(this);
         catalogoLibriTask.execute();
+    }
+
+    private void logout() {
+        SharedPreferences prefs = getSharedPreferences(getString(R.string.app_share_base), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.clear();
+        editor.apply();
+
+        DefaultHttpClient client = HTTPClients.getDefaultHttpClient();
+        client.getCookieStore().clear();
+        logoutUpstreamRequest();
+    }
+
+    private void logoutUpstreamRequest()   {
+        try{
+            Ion.with(this)
+                    .load(getString(R.string.upstream_base_url) + getString(R.string.upstream_logout_path))
+                    .addQuery("isAndroid","true")
+                    .asString()
+                    .get();
+        }catch (InterruptedException | ExecutionException ex){
+            Log.d("error", ex.getMessage());
+        }
+
+
     }
 
     /**
@@ -186,12 +217,12 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+//         Handle action bar item clicks here. The action bar will
+//         automatically handle clicks on the Home/Up button, so long
+//         as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
+        Log.d("menu-item", "onOptionsItemSelected: " + item.getTitle());
+//        noinspection SimplifiableIfStatement
 //        if (id == R.id.action_settings) {
 //            return true;
 //        }
@@ -202,13 +233,23 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            // Handle the camera action
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+            return true;
         } else if (id == R.id.nav_prestiti) {
+            Intent intent = new Intent(getApplicationContext(), PrestitiActivity.class);
+            intent.putExtra("idUtente", "1");
+            startActivity(intent);
+            return true;
+        } else if (id == R.id.nav_logout) {
+            logout();
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(intent);
 
+            return true;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
