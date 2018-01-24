@@ -4,9 +4,11 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -26,16 +28,28 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.alexandria.android.alexandrialibrary.model.StatusResponse;
+import com.alexandria.android.alexandrialibrary.helper.HTTPClients;
+import com.alexandria.android.alexandrialibrary.model.Utente;
 import com.google.gson.Gson;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONObject;
+
 import java.io.BufferedInputStream;
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -147,6 +161,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
+
     //
     private boolean isUtenteValid(String utente) {
         return utente.length() > 4;
@@ -250,7 +265,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, StatusResponse> {
+    public class UserLoginTask extends AsyncTask<Void, Void, String> {
 
         private final String mUtente;
         private final String mPassword;
@@ -261,27 +276,48 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
         @Override
-        protected StatusResponse doInBackground(Void... params) {
-            URL url = null;
-            HttpURLConnection urlConnection = null;
-            Gson gson = new Gson();
-
+        protected String doInBackground(Void... params) {
             try {
-                url = new URL(getString(R.string.upstream_base_url) + "login?nome=alessandro&password=alessandro&isAndroid=true");
-                urlConnection = (HttpURLConnection) url.openConnection();
-                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-                String json = readStream(in);
-                Log.d("LOGIN", json);
+                // setup request
+                String loginUrl = getString(R.string.upstream_base_url) + getString(R.string.upstream_login_path);
+                DefaultHttpClient client =  HTTPClients.getDefaultHttpClient();
+                HttpPost post = new HttpPost(loginUrl);
 
-                return gson.fromJson(json, StatusResponse.class);
+                //add request post body
+                List<NameValuePair> postParams = new ArrayList<>();
+                postParams.add(new BasicNameValuePair("nome", mUtente));
+                postParams.add(new BasicNameValuePair("password", mPassword));
+                postParams.add(new BasicNameValuePair("isAndroid", "true"));
+                post.setEntity(new UrlEncodedFormEntity(postParams));
 
+                HttpResponse response = client.execute(post);
+
+                // read response
+                InputStream in = new BufferedInputStream(response.getEntity().getContent());
+                return readStream(in);
             } catch (MalformedURLException ex) {
                 return null;
             } catch (IOException ex) {
                 return null;
-            } finally {
-                urlConnection.disconnect();
             }
+        }
+
+        private String getQuery(List<NameValuePair> params) throws UnsupportedEncodingException {
+            StringBuilder result = new StringBuilder();
+            boolean first = true;
+
+            for (NameValuePair pair : params) {
+                if (first)
+                    first = false;
+                else
+                    result.append("&");
+
+                result.append(URLEncoder.encode(pair.getName(), "UTF-8"));
+                result.append("=");
+                result.append(URLEncoder.encode(pair.getValue(), "UTF-8"));
+            }
+
+            return result.toString();
         }
 
         private String readStream(InputStream is) {
@@ -299,17 +335,40 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
         @Override
-        protected void onPostExecute(final StatusResponse statusResponse) {
+        protected void onPostExecute(final String result) {
             mAuthTask = null;
             showProgress(false);
 
-            if (statusResponse != null && statusResponse.isDone()) {
-                Log.d("LOGIN","Login avvenuto con successo");
-                loginSuccess();
+            if (result != null) {
+                try {
+                    JSONObject o = new JSONObject(result);
+                    boolean done = o.optString("done").equals("true") ? true : false;
+
+                    if (done) {
+                        Log.d("LOGIN", "Login avvenuto con successo");
+                        Gson gson = new Gson();
+                        Utente utente = gson.fromJson(o.optString("utente"), Utente.class);
+
+                        saveUtente(utente);
+                        loginSuccess();
+                    } else {
+                        mPasswordView.setError(getString(R.string.error_incorrect_login));
+                        mPasswordView.requestFocus();
+                    }
+                } catch (Throwable t) {
+                    t.printStackTrace();
+                }
+
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                mPasswordView.setError(getString(R.string.error_incorrect_login));
                 mPasswordView.requestFocus();
             }
+        }
+
+        private void saveUtente(Utente utente){
+            SharedPreferences prefs = getSharedPreferences(getString(R.string.app_share_base), Context.MODE_PRIVATE);
+            prefs.edit().putInt("idUtente", utente.getId());
+            prefs.edit().putBoolean("isAdmin", utente.isAmministratore());
         }
 
         @Override

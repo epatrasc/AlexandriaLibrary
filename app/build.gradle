@@ -27,4 +27,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     compile 'com.google.code.gson:gson:2.8.2'
+    compile 'com.koushikdutta.ion:ion:2.2.1'
+    android{ useLibrary  'org.apache.http.legacy'}
 }
