@@ -24,4 +24,15 @@
     <string name="action_settings">Settings</string>
 
     <string name="image_book_tag">image_book</string>
+
+    <string name="nav_home_label">Home</string>
+    <string name="nav_prestiti_label">Prestiti</string>
+    <string name="nav_logout_label">Logout</string>
+
+    <string name="shared_preferences_is_logged">isLogged</string>
+    <string name="shared_preferences_is_admin">isAdmin</string>
+    <string name="shared_preferences_id_utente">idUtente</string>
+    <string name="shared_preferences_utente">utente</string>
+
+    <string name="tomcat_session_tracker">JSESSIONID</string>
 </resources>

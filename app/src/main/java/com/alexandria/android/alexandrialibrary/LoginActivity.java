@@ -41,12 +41,9 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URLEncoder;
@@ -73,6 +70,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         // Set up the login form.
         mUtenteView = (AutoCompleteTextView) findViewById(R.id.utente);
         populateAutoComplete();
@@ -367,8 +365,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         private void saveUtente(Utente utente){
             SharedPreferences prefs = getSharedPreferences(getString(R.string.app_share_base), Context.MODE_PRIVATE);
-            prefs.edit().putInt("idUtente", utente.getId());
-            prefs.edit().putBoolean("isAdmin", utente.isAmministratore());
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean(getString(R.string.shared_preferences_is_logged), true);
+            editor.putString(getString(R.string.shared_preferences_utente),new Gson().toJson(utente).toString());
+            editor.putInt(getString(R.string.shared_preferences_id_utente), utente.getId());
+            editor.putBoolean(getString(R.string.shared_preferences_is_admin), utente.isAmministratore());
+            editor.apply();
+
+            Log.d("SharedPreferences", Boolean.toString(prefs.getBoolean(getString(R.string.shared_preferences_is_logged),false)));
         }
 
         @Override
