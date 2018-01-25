@@ -16,7 +16,8 @@
     </string>
     <item name="visible" type="id" />
     <item name="masked" type="id" />
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">Home</string>
+    <string name="title_activity_prestiti">Prestiti</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
