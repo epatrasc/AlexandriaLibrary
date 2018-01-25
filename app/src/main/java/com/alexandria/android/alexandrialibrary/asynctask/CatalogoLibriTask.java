@@ -21,9 +21,9 @@ public class CatalogoLibriTask extends AsyncTask<Void, Void, List<Libro>> {
 
     @Override
     protected List<Libro> doInBackground(Void... params) {
-        CatalogoLibriService service = new CatalogoLibriService();
+        CatalogoLibriService service = new CatalogoLibriService(activity.getApplicationContext());
 
-        return service.getLibri(activity.getApplicationContext());
+        return service.getLibri();
     }
 
     @Override

@@ -29,9 +29,9 @@ public class PrestitiTask extends AsyncTask<Void, Void, List<Prestito>> {
 
     @Override
     protected List<Prestito> doInBackground(Void... params) {
-        PrestitiService service = new PrestitiService();
+        PrestitiService service = new PrestitiService(activity.getApplicationContext());
 
-        return service.getPrestiti(activity.getApplicationContext());
+        return service.getPrestiti();
     }
 
     @Override

@@ -8,4 +8,10 @@
     <string name="upstream_base_url">http://192.168.1.12:8080/Alexandria</string>
     <string name="upstream_login_path">/login</string>
     <string name="upstream_logout_path">/logout</string>
+
+    <string name="upstream_prestiti_path">/prestiti?isAndroid=true</string>
+    <string name="upstream_prestito_presta_path">/prestito/presta</string>
+    <string name="upstream_prestito_restituisci_path">/prestito/restituisci</string>
+    <string name="upstream_catalogo_visualizza_path">/catalogo/visualizza?isAndroid=true</string>
+
 </resources>

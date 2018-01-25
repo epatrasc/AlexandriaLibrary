@@ -29,6 +29,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.alexandria.android.alexandrialibrary.helper.HTTPClients;
+import com.alexandria.android.alexandrialibrary.helper.Utils;
 import com.alexandria.android.alexandrialibrary.model.Utente;
 import com.google.gson.Gson;
 
@@ -292,7 +293,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                 // read response
                 InputStream in = new BufferedInputStream(response.getEntity().getContent());
-                return readStream(in);
+                return Utils.readStream(in);
             } catch (MalformedURLException ex) {
                 return null;
             } catch (IOException ex) {
@@ -316,20 +317,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
 
             return result.toString();
-        }
-
-        private String readStream(InputStream is) {
-            try {
-                ByteArrayOutputStream bo = new ByteArrayOutputStream();
-                int i = is.read();
-                while (i != -1) {
-                    bo.write(i);
-                    i = is.read();
-                }
-                return bo.toString();
-            } catch (IOException e) {
-                return "";
-            }
         }
 
         @Override

@@ -20,14 +20,14 @@ public class PrestitoTask extends AsyncTask<String, Void, Boolean> {
     public PrestitoTask(Context context,int idLibro) {
         this.context = context;
         this.idLibro = idLibro;
-        this.service  = new PrestitoService();
+        this.service  = new PrestitoService(context);
     }
 
     public PrestitoTask(Context context,int idLibro,int idUtente) {
         this.context = context;
         this.idLibro = idLibro;
         this.idUtente = idUtente;
-        this.service  = new PrestitoService();
+        this.service  = new PrestitoService(context);
     }
 
     @Override
