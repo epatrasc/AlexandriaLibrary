@@ -16,10 +16,11 @@ import com.alexandria.android.alexandrialibrary.asynctask.ActionTask;
 import com.alexandria.android.alexandrialibrary.helper.GlobalSettings;
 import com.alexandria.android.alexandrialibrary.model.Libro;
 import com.alexandria.android.alexandrialibrary.model.LibroAction;
+import com.alexandria.android.alexandrialibrary.model.StatusResponse;
 import com.google.gson.Gson;
 
 public class BookDetailActivity extends AppCompatActivity {
-    private Libro libro;
+    private LibroAction libroAction;
     private Activity activity;
 
     @Override
@@ -30,7 +31,8 @@ public class BookDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_book_detail);
         Intent intent = getIntent();
 
-        libro = new Gson().fromJson(intent.getStringExtra("libro"), Libro.class);
+        libroAction = new Gson().fromJson(intent.getStringExtra("libroAction"), LibroAction.class);
+        Libro libro = libroAction.getLibro();
 
         updateViewText();
 
@@ -48,22 +50,32 @@ public class BookDetailActivity extends AppCompatActivity {
             }
         });
 
-        //action button
-        Button actionButton = findViewById(R.id.book_detail_btn_action);
-        actionButton.setText(libro.isDisponibile() ? "Presta" : "Restituisci");
+        // action button
+        String action = libroAction.getAction();
+        String actionLabel = action.equals(LibroAction.NO_ACTION) ? "In Prestito" : action;
+
+        final Button actionButton = findViewById(R.id.book_detail_btn_action);
+        actionButton.setTag(action);
+        actionButton.setText(actionLabel);
+        actionButton.setEnabled(!action.equals(LibroAction.NO_ACTION));
 
         backButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 int idUtente = GlobalSettings.getIdUtente(view.getContext());
-                String action = libro.isDisponibile() ? LibroAction.PRESTA : LibroAction.PRESTA;
-                ActionTask task = new ActionTask(activity, libro.getId(), idUtente);
+                String action = libroAction.getAction();
+                ActionTask task = new ActionTask(actionButton, libroAction.getLibro().getId(), idUtente);
 
                 task.setOnActionExecuted(new BookListListener() {
                     @Override
-                    public void onActionExecuted(LibroAction libroAction) {
-                        //TODO implementare azioni post click bottone
-                        String msg = libroAction != null ? "Operazione eseguita correttamente" : "Errore";
-                        Toast.makeText(activity.getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+                    public void onActionExecuted(View view, StatusResponse statusResponse) {
+                        Toast.makeText(activity.getApplicationContext(), statusResponse.getMessaggio(), Toast.LENGTH_SHORT).show();
+
+                        if (statusResponse.isDone()) {
+                            String newAction = view.getTag().equals(LibroAction.PRESTA) ? LibroAction.RESTITUISCI : LibroAction.PRESTA;
+                            view.setTag(newAction);
+                            actionButton.setText(newAction);
+                        }
+                        view.setEnabled(true);
                     }
                 });
 
@@ -78,6 +90,7 @@ public class BookDetailActivity extends AppCompatActivity {
         TextView editore = findViewById(R.id.book_detail_editore);
         TextView descrizione = findViewById(R.id.book_detail_description);
 
+        Libro libro = libroAction.getLibro();
         titolo.setText(libro.getTitolo());
         autori.setText(libro.getAutori());
         editore.setText(libro.getEditore());

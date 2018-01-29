@@ -21,6 +21,7 @@ import com.alexandria.android.alexandrialibrary.asynctask.ActionTask;
 import com.alexandria.android.alexandrialibrary.helper.GlobalSettings;
 import com.alexandria.android.alexandrialibrary.model.Libro;
 import com.alexandria.android.alexandrialibrary.model.LibroAction;
+import com.alexandria.android.alexandrialibrary.model.StatusResponse;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -65,32 +66,40 @@ public class BookListAdapter extends ArrayAdapter<LibroAction> {
         imageLoader.DisplayImage(libro.getImageUrl(), imageView);
 
         // action button
-        Button actionButton = rowView.findViewById(R.id.action_button);
         String action = libriAction.get(position).getAction();
         String actionLabel = action.equals(LibroAction.NO_ACTION) ? "In Prestito" : action;
+
+        final Button actionButton = rowView.findViewById(R.id.action_button);
+        actionButton.setTag(action);
         actionButton.setText(actionLabel);
-        actionButton.setEnabled(action.equals(LibroAction.NO_ACTION));
+        actionButton.setEnabled(!action.equals(LibroAction.NO_ACTION));
+
 
         actionButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 view.setEnabled(false);
-                Libro libro = libriAction.get(position).getLibro();
+
                 int idUtente = GlobalSettings.getIdUtente(context);
-                String action = libriAction.get(position).getAction();
-
-                ActionTask task = new ActionTask(context, libro.getId(), idUtente);
-
-                // set task action listener
-                task.setOnActionExecuted(new BookListListener() {
-                    @Override
-                    public void onActionExecuted(LibroAction libroAction) {
-                        //TODO implementare azioni post click bottone
-                        String msg = libroAction != null ? "Operazione eseguita correttamente" : "Errore";
-                        Toast.makeText(context.getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-                    }
-                });
+                String action = (String) view.getTag();
+                Libro libro = libriAction.get(position).getLibro();
 
                 if (!action.equals(LibroAction.NO_ACTION)) {
+                    ActionTask task = new ActionTask(actionButton, libro.getId(), idUtente);
+
+                    // set task action listener
+                    task.setOnActionExecuted(new BookListListener() {
+                        @Override
+                        public void onActionExecuted(View view, StatusResponse statusResponse) {
+                            Toast.makeText(context.getApplicationContext(), statusResponse.getMessaggio(), Toast.LENGTH_SHORT).show();
+
+                            if (statusResponse.isDone()) {
+                                String newAction = view.getTag().equals(LibroAction.PRESTA) ? LibroAction.RESTITUISCI : LibroAction.PRESTA;
+                                view.setTag(newAction);
+                                actionButton.setText(newAction);
+                            }
+                            view.setEnabled(true);
+                        }
+                    });
                     task.execute(action);
                 }
 
@@ -102,9 +111,8 @@ public class BookListAdapter extends ArrayAdapter<LibroAction> {
 
         detailButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Libro libro = libriAction.get(position).getLibro();
                 Intent intent = new Intent(context, BookDetailActivity.class);
-                intent.putExtra("libro", new Gson().toJson(libro));
+                intent.putExtra("libroAction", new Gson().toJson(libriAction.get(position)));
                 context.startActivity(intent);
             }
         });
