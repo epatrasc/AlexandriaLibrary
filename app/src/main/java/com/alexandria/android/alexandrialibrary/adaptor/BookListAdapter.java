@@ -10,32 +10,36 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alexandria.android.alexandrialibrary.BookDetailActivity;
 import com.alexandria.android.alexandrialibrary.R;
 
+import com.alexandria.android.alexandrialibrary.adaptor.listener.BookListListener;
 import com.alexandria.android.alexandrialibrary.asynctask.ImageLoaderTask;
-import com.alexandria.android.alexandrialibrary.asynctask.PrestitoTask;
+import com.alexandria.android.alexandrialibrary.asynctask.ActionTask;
+import com.alexandria.android.alexandrialibrary.helper.GlobalSettings;
 import com.alexandria.android.alexandrialibrary.model.Libro;
+import com.alexandria.android.alexandrialibrary.model.LibroAction;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BookListAdapter extends ArrayAdapter<Libro> {
+public class BookListAdapter extends ArrayAdapter<LibroAction> {
 
     private final Activity context;
     private final String[] urls;
     private static LayoutInflater inflater = null;
-    private List<Libro> libri = new ArrayList<>();
-    public ImageLoaderTask imageLoader;
+    private List<LibroAction> libriAction = new ArrayList<>();
+    private ImageLoaderTask imageLoader;
 
-    public BookListAdapter(Activity context, List<Libro> libri) {
-        super(context, R.layout.catalogo_list, libri);
+    public BookListAdapter(Activity context, List<LibroAction> libriAction) {
+        super(context, R.layout.catalogo_list, libriAction);
 
         this.context = context;
-        this.libri = libri;
-        this.urls = new String[libri.size()];
+        this.libriAction = libriAction;
+        this.urls = new String[libriAction.size()];
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.imageLoader = new ImageLoaderTask(context.getApplicationContext());
     }
@@ -52,7 +56,7 @@ public class BookListAdapter extends ArrayAdapter<Libro> {
         TextView txtAutori = (TextView) rowView.findViewById(R.id.list_book_autori);
         TextView txtEditore = (TextView) rowView.findViewById(R.id.list_book_editore);
 
-        Libro libro = libri.get(position);
+        Libro libro = libriAction.get(position).getLibro();
 
         txtTitle.setText(libro.getTitolo());
         txtAutori.setText(libro.getAutori());
@@ -60,16 +64,36 @@ public class BookListAdapter extends ArrayAdapter<Libro> {
 
         imageLoader.DisplayImage(libro.getImageUrl(), imageView);
 
-        // presta button
-        Button prestaButton = rowView.findViewById(R.id.presta_button);
+        // action button
+        Button actionButton = rowView.findViewById(R.id.action_button);
+        String action = libriAction.get(position).getAction();
+        String actionLabel = action.equals(LibroAction.NO_ACTION) ? "In Prestito" : action;
+        actionButton.setText(actionLabel);
+        actionButton.setEnabled(action.equals(LibroAction.NO_ACTION));
 
-        prestaButton.setOnClickListener(new View.OnClickListener() {
+        actionButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Libro libro = libri.get(position);
-                int idLibro = libro.getId();
-                int idUtente = 1; // TODO retrieve utente
-                PrestitoTask task = new PrestitoTask(view.getContext(), idLibro, idUtente);
-                task.execute(PrestitoTask.ACTION_PRESTA);
+                view.setEnabled(false);
+                Libro libro = libriAction.get(position).getLibro();
+                int idUtente = GlobalSettings.getIdUtente(context);
+                String action = libriAction.get(position).getAction();
+
+                ActionTask task = new ActionTask(context, libro.getId(), idUtente);
+
+                // set task action listener
+                task.setOnActionExecuted(new BookListListener() {
+                    @Override
+                    public void onActionExecuted(LibroAction libroAction) {
+                        //TODO implementare azioni post click bottone
+                        String msg = libroAction != null ? "Operazione eseguita correttamente" : "Errore";
+                        Toast.makeText(context.getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                if (!action.equals(LibroAction.NO_ACTION)) {
+                    task.execute(action);
+                }
+
             }
         });
 
@@ -78,7 +102,7 @@ public class BookListAdapter extends ArrayAdapter<Libro> {
 
         detailButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Libro libro = libri.get(position);
+                Libro libro = libriAction.get(position).getLibro();
                 Intent intent = new Intent(context, BookDetailActivity.class);
                 intent.putExtra("libro", new Gson().toJson(libro));
                 context.startActivity(intent);
@@ -87,8 +111,6 @@ public class BookListAdapter extends ArrayAdapter<Libro> {
 
         return rowView;
     }
-
-    ;
 
     public int getCount() {
         return urls.length;

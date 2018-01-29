@@ -6,6 +6,7 @@ import com.alexandria.android.alexandrialibrary.R;
 import com.alexandria.android.alexandrialibrary.helper.HTTPClients;
 import com.alexandria.android.alexandrialibrary.helper.Utils;
 import com.alexandria.android.alexandrialibrary.model.Libro;
+import com.alexandria.android.alexandrialibrary.model.LibroAction;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -39,7 +40,7 @@ public class CatalogoLibriService {
         this.urlCatalogo = baseUrl + context.getString(R.string.upstream_catalogo_visualizza_path);
     }
 
-    public List<Libro> getLibri(){
+    public List<LibroAction> getLibri(){
         try {
             // setup request
             DefaultHttpClient client = HTTPClients.getDefaultHttpClient();
@@ -63,7 +64,7 @@ public class CatalogoLibriService {
         return new ArrayList<>();
     }
 
-    private List<Libro> getCatalogoFromJson(String json) {
+    private List<LibroAction> getCatalogoFromJson(String json) {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
             public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
@@ -72,10 +73,11 @@ public class CatalogoLibriService {
         });
 
         Gson gson = builder.create();
-        return gson.fromJson(json, new TypeToken<List<Libro>>() {
+        return gson.fromJson(json, new TypeToken<List<LibroAction>>() {
         }.getType());
     }
 
+    //TODO update the stub method to use LibroAction
     private List<Libro> stub() {
         String json = null;
         InputStream is = null;

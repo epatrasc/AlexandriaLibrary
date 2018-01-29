@@ -2,7 +2,6 @@ package com.alexandria.android.alexandrialibrary.adaptor;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +10,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.alexandria.android.alexandrialibrary.BookDetailActivity;
 import com.alexandria.android.alexandrialibrary.R;
 import com.alexandria.android.alexandrialibrary.asynctask.ImageLoaderTask;
-import com.alexandria.android.alexandrialibrary.asynctask.PrestitoTask;
-import com.alexandria.android.alexandrialibrary.model.Libro;
+import com.alexandria.android.alexandrialibrary.asynctask.ActionTask;
 import com.alexandria.android.alexandrialibrary.model.Prestito;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,8 +72,8 @@ public class PrestitiListAdapter extends ArrayAdapter<Prestito> {
                 public void onClick(View view) {
                     Prestito prestito = prestiti.get(position);
 
-                    PrestitoTask task = new PrestitoTask(view.getContext(), prestito.getIdLibro());
-                    task.execute(PrestitoTask.ACTION_RESTITUISCI);
+                    ActionTask task = new ActionTask(view.getContext(), prestito.getIdLibro());
+                    task.execute(ActionTask.ACTION_RESTITUISCI);
                 }
             });
         }

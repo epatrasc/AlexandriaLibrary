@@ -8,11 +8,12 @@ import android.widget.Toast;
 import com.alexandria.android.alexandrialibrary.MainActivity;
 import com.alexandria.android.alexandrialibrary.adaptor.BookListAdapter;
 import com.alexandria.android.alexandrialibrary.model.Libro;
+import com.alexandria.android.alexandrialibrary.model.LibroAction;
 import com.alexandria.android.alexandrialibrary.service.CatalogoLibriService;
 
 import java.util.List;
 
-public class CatalogoLibriTask extends AsyncTask<Void, Void, List<Libro>> {
+public class CatalogoLibriTask extends AsyncTask<Void, Void, List<LibroAction>> {
     private MainActivity activity;
 
     public CatalogoLibriTask(MainActivity activitiy) {
@@ -20,18 +21,18 @@ public class CatalogoLibriTask extends AsyncTask<Void, Void, List<Libro>> {
     }
 
     @Override
-    protected List<Libro> doInBackground(Void... params) {
+    protected List<LibroAction> doInBackground(Void... params) {
         CatalogoLibriService service = new CatalogoLibriService(activity.getApplicationContext());
 
         return service.getLibri();
     }
 
     @Override
-    protected void onPostExecute(final List<Libro> libri) {
+    protected void onPostExecute(final List<LibroAction> libriAction) {
         activity.showProgress(false);
 
-        if (libri != null && libri.size() > 0) {
-            BookListAdapter adapter = new BookListAdapter(activity, libri);
+        if (libriAction != null && libriAction.size() > 0) {
+            BookListAdapter adapter = new BookListAdapter(activity, libriAction);
 
             activity.getBookView().setAdapter(adapter);
             activity.getBookView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -39,7 +40,7 @@ public class CatalogoLibriTask extends AsyncTask<Void, Void, List<Libro>> {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
                                         int position, long id) {
-                    Libro libro = libri.get(+position);
+                    Libro libro = libriAction.get(+position).getLibro();
                     Toast.makeText(activity.getApplicationContext(), libro.getTitolo(), Toast.LENGTH_SHORT).show();
 
                 }
