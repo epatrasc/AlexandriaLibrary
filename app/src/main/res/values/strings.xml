@@ -19,6 +19,7 @@
     <string name="title_activity_main">Home</string>
     <string name="title_activity_prestiti">Prestiti</string>
 
+    <string name="dialog_ask_user_utente">Selezionare Utente</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
@@ -36,4 +37,9 @@
     <string name="shared_preferences_utente">utente</string>
 
     <string name="tomcat_session_tracker">JSESSIONID</string>
+
+    <!-- buttons label -->
+    <string name="annulla">Annulla</string>
+    <string name="esegui">Esegui</string>
+    <string name="ok">OK</string>
 </resources>
