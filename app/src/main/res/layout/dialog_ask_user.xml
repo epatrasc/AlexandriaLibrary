@@ -13,7 +13,7 @@
         android:src="@drawable/ic_account_balance_black_48dp" />
 
     <Spinner
-        android:id="@+id/id_utente"
+        android:id="@+id/diaslog_ask_utente_spinner_id_utente"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
