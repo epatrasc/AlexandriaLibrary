@@ -24,7 +24,7 @@ public class DialogAskUser extends DialogFragment {
     private Spinner spinner;
     private String action;
     private int idLibro;
-    private HashMap<String, Integer> spinnerMap ;
+    private HashMap<String, Integer> spinnerMap;
 
     public static DialogAskUser newInstance(String action, int idLibro) {
         DialogAskUser dialogAskUser = new DialogAskUser();
@@ -51,24 +51,29 @@ public class DialogAskUser extends DialogFragment {
         // Get the layout inflater
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_ask_user, null);
-                // Inflate and set the layout for the dialog
-        // Pass null as the parent view because its going in the dialog layout
-        builder.setView(view)
-                // Add action buttons
-                .setPositiveButton(R.string.esegui, new DialogInterface.OnClickListener() {
+
+        Button btnEsegui = (Button) view.findViewById(R.id.dialog_ask_user_btn_esegui);
+        Button btnAnulla = (Button) view.findViewById(R.id.dialog_ask_user_btn_annulla);
+        btnEsegui.setOnClickListener(
+                new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int id) {
+                    public void onClick(View view) {
                         String nomeUtente = (String) spinner.getSelectedItem();
                         int idUtente = spinnerMap.get(nomeUtente);
                         mListener.onDialogPositiveClick(action, idLibro, idUtente);
+                        DialogAskUser.this.getDialog().cancel();
                     }
-                })
-                .setNegativeButton(R.string.annulla, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
+                }
+        );
+        btnAnulla.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
                         DialogAskUser.this.getDialog().cancel();
                     }
                 });
 
+        builder.setView(view);
         String[] spinnerArray = new String[2];
         spinnerMap = new HashMap<String, Integer>();
         spinnerMap.put("Dante", 1);

@@ -10,18 +10,15 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alexandria.android.alexandrialibrary.BookDetailActivity;
+import com.alexandria.android.alexandrialibrary.MainActivity;
 import com.alexandria.android.alexandrialibrary.R;
-
-import com.alexandria.android.alexandrialibrary.adaptor.listener.BookListListener;
 import com.alexandria.android.alexandrialibrary.asynctask.ImageLoaderTask;
-import com.alexandria.android.alexandrialibrary.asynctask.ActionTask;
+import com.alexandria.android.alexandrialibrary.fragment.DialogAskUser;
 import com.alexandria.android.alexandrialibrary.helper.GlobalSettings;
 import com.alexandria.android.alexandrialibrary.model.Libro;
 import com.alexandria.android.alexandrialibrary.model.LibroAction;
-import com.alexandria.android.alexandrialibrary.model.StatusResponse;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -79,28 +76,18 @@ public class BookListAdapter extends ArrayAdapter<LibroAction> {
             public void onClick(View view) {
                 view.setEnabled(false);
 
-                int idUtente = GlobalSettings.getIdUtente(context);
+                int idUtente = GlobalSettings.getIdUtente(view.getContext());
                 String action = (String) view.getTag();
                 Libro libro = libriAction.get(position).getLibro();
 
                 if (!action.equals(LibroAction.NO_ACTION)) {
-                    ActionTask task = new ActionTask(actionButton, libro.getId(), idUtente);
+                    boolean isAdministrator = GlobalSettings.isAdministrator(context.getApplicationContext());
 
-                    // set task action listener
-                    task.setOnActionExecuted(new BookListListener() {
-                        @Override
-                        public void onActionExecuted(View view, StatusResponse statusResponse) {
-                            Toast.makeText(context.getApplicationContext(), statusResponse.getMessaggio(), Toast.LENGTH_SHORT).show();
-
-                            if (statusResponse.isDone()) {
-                                String newAction = view.getTag().equals(LibroAction.PRESTA) ? LibroAction.RESTITUISCI : LibroAction.PRESTA;
-                                view.setTag(newAction);
-                                actionButton.setText(newAction);
-                            }
-                            view.setEnabled(true);
-                        }
-                    });
-                    task.execute(action);
+                    if (action.equals(LibroAction.PRESTA) && isAdministrator) {
+                        showDialogAskUser(actionButton, action, libro.getId());
+                        return;
+                    }
+                    ((MainActivity)context).createActionTask(actionButton, action, libro.getId(), idUtente);
                 }
 
             }
@@ -118,6 +105,12 @@ public class BookListAdapter extends ArrayAdapter<LibroAction> {
         });
 
         return rowView;
+    }
+
+    public void showDialogAskUser(final Button button, String action, int idLibro) {
+        // Create an instance of the dialog fragment and show it
+        DialogAskUser dialog = DialogAskUser.newInstance(action, idLibro);
+        dialog.show(((MainActivity)context).getSupportFragmentManager(), "DialogAskUserFragment");
     }
 
     public int getCount() {

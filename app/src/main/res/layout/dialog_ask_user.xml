@@ -6,27 +6,44 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="64dp"
+        android:layout_height="@android:dimen/notification_large_icon_height"
+        android:layout_weight="1"
         android:background="@color/colorPrimary"
         android:contentDescription="@string/app_name"
         android:scaleType="center"
-        android:src="@drawable/ic_account_balance_black_48dp" />
+        android:src="@drawable/ic_account_box_white_48dp" />
+
+    <TextView
+        android:id="@+id/dialog_ask_user_question"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1"
+        android:text="@string/dialog_ask_user_utente"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
 
     <Spinner
         android:id="@+id/diaslog_ask_utente_spinner_id_utente"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
         android:layout_marginBottom="4dp"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
-        android:layout_marginTop="16dp"
+        android:layout_weight="1"
         android:hint="@string/dialog_ask_user_utente"
         android:inputType="textEmailAddress" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp">
 
         <Button
             android:id="@+id/dialog_ask_user_btn_annulla"

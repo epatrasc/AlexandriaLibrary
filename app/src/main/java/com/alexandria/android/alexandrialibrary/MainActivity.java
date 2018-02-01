@@ -23,11 +23,18 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.alexandria.android.alexandrialibrary.adaptor.listener.BookListListener;
+import com.alexandria.android.alexandrialibrary.asynctask.ActionTask;
 import com.alexandria.android.alexandrialibrary.asynctask.CatalogoLibriTask;
+import com.alexandria.android.alexandrialibrary.fragment.DialogAskUser;
 import com.alexandria.android.alexandrialibrary.helper.HTTPClients;
+import com.alexandria.android.alexandrialibrary.model.LibroAction;
+import com.alexandria.android.alexandrialibrary.model.StatusResponse;
 import com.alexandria.android.alexandrialibrary.model.Utente;
 import com.google.gson.Gson;
 import com.koushikdutta.ion.Ion;
@@ -38,7 +45,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, DialogAskUser.DialogAskUserListener {
     private View mProgressView;
     private ListView bookView = null;
     private Utente utente;
@@ -261,6 +268,30 @@ public class MainActivity extends AppCompatActivity
     public void onDestroy() {
         bookView.setAdapter(null);
         super.onDestroy();
+    }
+
+    public void createActionTask(final Button button, String action, int idLibro, int idUtente) {
+        ActionTask task = new ActionTask(button, idLibro, idUtente);
+        task.setOnActionExecuted(new BookListListener() {
+            @Override
+            public void onActionExecuted(View view, StatusResponse statusResponse) {
+                Toast.makeText(view.getContext(), statusResponse.getMessaggio(), Toast.LENGTH_SHORT).show();
+
+                if (statusResponse.isDone()) {
+                    String newAction = view.getTag().equals(LibroAction.PRESTA) ? LibroAction.RESTITUISCI : LibroAction.PRESTA;
+                    button.setTag(newAction);
+                    button.setText(newAction);
+                }
+                button.setEnabled(true);
+            }
+        });
+
+        task.execute(action);
+    }
+
+    @Override
+    public void onDialogPositiveClick(String action, int idLibro, int idUtente) {
+        createActionTask(action, idLibro, idUtente);
     }
 
     public ListView getBookView() {

@@ -88,11 +88,10 @@ public class BookDetailActivity extends AppCompatActivity implements DialogAskUs
 
                 if (statusResponse.isDone()) {
                     String newAction = view.getTag().equals(LibroAction.PRESTA) ? LibroAction.RESTITUISCI : LibroAction.PRESTA;
-                    view.setTag(newAction);
                     actionButton.setTag(newAction);
                     actionButton.setText(newAction);
                 }
-                view.setEnabled(true);
+                actionButton.setEnabled(true);
             }
         });
 
@@ -108,6 +107,11 @@ public class BookDetailActivity extends AppCompatActivity implements DialogAskUs
     @Override
     public void onDialogPositiveClick(String action, int idLibro, int idUtente) {
         createActionTask(action, idLibro, idUtente);
+    }
+
+    @Override
+    public void onDialogPositiveClick(Button button, String action, int idLibro, int idUtente) {
+        // Not yet Implemented
     }
 
     private void updateViewText() {
