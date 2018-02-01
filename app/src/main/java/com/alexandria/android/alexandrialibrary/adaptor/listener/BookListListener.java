@@ -1,10 +1,8 @@
 package com.alexandria.android.alexandrialibrary.adaptor.listener;
 
-import android.view.View;
-
-import com.alexandria.android.alexandrialibrary.model.StatusResponse;
+import com.alexandria.android.alexandrialibrary.model.LibroAction;
 
 public interface BookListListener {
 
-    public void onActionExecuted(View view,  StatusResponse statusResponse);
+    public void onActionExecuted(LibroAction libroAction);
 }

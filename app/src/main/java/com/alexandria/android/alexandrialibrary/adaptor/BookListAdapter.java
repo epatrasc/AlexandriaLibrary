@@ -63,31 +63,34 @@ public class BookListAdapter extends ArrayAdapter<LibroAction> {
         imageLoader.DisplayImage(libro.getImageUrl(), imageView);
 
         // action button
+        Button actionButton = rowView.findViewById(R.id.action_button);
         String action = libriAction.get(position).getAction();
         String actionLabel = action.equals(LibroAction.NO_ACTION) ? "In Prestito" : action;
-
-        final Button actionButton = rowView.findViewById(R.id.action_button);
-        actionButton.setTag(action);
         actionButton.setText(actionLabel);
-        actionButton.setEnabled(!action.equals(LibroAction.NO_ACTION));
-
+        actionButton.setEnabled(action.equals(LibroAction.NO_ACTION));
 
         actionButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 view.setEnabled(false);
-
-                int idUtente = GlobalSettings.getIdUtente(view.getContext());
-                String action = (String) view.getTag();
                 Libro libro = libriAction.get(position).getLibro();
+                int idUtente = GlobalSettings.getIdUtente(context);
+                String action = libriAction.get(position).getAction();
+
+                ActionTask task = new ActionTask(context, libro.getId(), idUtente);
+
+                // set task action listener
+                task.setOnActionExecuted(new BookListListener() {
+                    @Override
+                    public void onActionExecuted(LibroAction libroAction) {
+                        //TODO implementare azioni post click bottone
+                        String msg = libroAction != null ? "Operazione eseguita correttamente" : "Errore";
+                        Toast.makeText(context.getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
 
                 if (!action.equals(LibroAction.NO_ACTION)) {
                     boolean isAdministrator = GlobalSettings.isAdministrator(context.getApplicationContext());
-
-                    if (action.equals(LibroAction.PRESTA) && isAdministrator) {
-                        showDialogAskUser(actionButton, action, libro.getId());
-                        return;
-                    }
-                    ((MainActivity)context).createActionTask(actionButton, action, libro.getId(), idUtente);
+                    task.execute(action);
                 }
 
             }
@@ -98,8 +101,9 @@ public class BookListAdapter extends ArrayAdapter<LibroAction> {
 
         detailButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                Libro libro = libriAction.get(position).getLibro();
                 Intent intent = new Intent(context, BookDetailActivity.class);
-                intent.putExtra("libroAction", new Gson().toJson(libriAction.get(position)));
+                intent.putExtra("libro", new Gson().toJson(libro));
                 context.startActivity(intent);
             }
         });

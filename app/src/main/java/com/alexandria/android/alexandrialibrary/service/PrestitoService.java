@@ -6,7 +6,7 @@ import android.util.Log;
 import com.alexandria.android.alexandrialibrary.R;
 import com.alexandria.android.alexandrialibrary.helper.HTTPClients;
 import com.alexandria.android.alexandrialibrary.helper.Utils;
-import com.alexandria.android.alexandrialibrary.model.StatusResponse;
+import com.alexandria.android.alexandrialibrary.model.LibroAction;
 import com.google.gson.Gson;
 
 import org.apache.commons.lang3.StringUtils;
@@ -38,12 +38,13 @@ public class PrestitoService {
 
     }
 
-    public StatusResponse presta(int idLibro, int idUtente) {
+    public LibroAction presta(int idLibro, int idUtente) {
         try {
             // setup request
             DefaultHttpClient client = HTTPClients.getDefaultHttpClient();
             HttpPost post = new HttpPost(urlPresta);
 
+            HttpResponse response = client.execute(post);
             //add request post body
             List<NameValuePair> postParams = new ArrayList<>();
             postParams.add(new BasicNameValuePair("idLibro", Integer.toString(idLibro)));
@@ -52,12 +53,11 @@ public class PrestitoService {
             post.setEntity(new UrlEncodedFormEntity(postParams));
 
             // read response
-            HttpResponse response = client.execute(post);
             InputStream in = new BufferedInputStream(response.getEntity().getContent());
 
             String json = Utils.readStream(in);
             if (!StringUtils.isEmpty(json)) {
-                return new Gson().fromJson(json, StatusResponse.class);
+                return new Gson().fromJson(json, LibroAction.class);
             }
 
         } catch (MalformedURLException  ex) {
@@ -66,15 +66,16 @@ public class PrestitoService {
             Log.d("prestio-service", ex.getMessage());
         }
 
-        return new StatusResponse(false, "Errore durante la richiesta");
+        return null;
     }
 
-    public StatusResponse restituisci(int idLibro) {
+    public LibroAction restituisci(int idLibro) {
         try {
             // setup request
             DefaultHttpClient client = HTTPClients.getDefaultHttpClient();
             HttpPost post = new HttpPost(urlRestituisci);
 
+            HttpResponse response = client.execute(post);
             //add request post body
             List<NameValuePair> postParams = new ArrayList<>();
             postParams.add(new BasicNameValuePair("idLibro", Integer.toString(idLibro)));
@@ -82,12 +83,11 @@ public class PrestitoService {
             post.setEntity(new UrlEncodedFormEntity(postParams));
 
             // read response
-            HttpResponse response = client.execute(post);
             InputStream in = new BufferedInputStream(response.getEntity().getContent());
 
             String json = Utils.readStream(in);
-            if (!StringUtils.isEmpty(json) && !json.contains("DOCTYPE html")) {
-                return new Gson().fromJson(json, StatusResponse.class);
+            if (!StringUtils.isEmpty(json)) {
+                return new Gson().fromJson(json, LibroAction.class);
             }
 
         } catch (MalformedURLException  ex) {
@@ -96,7 +96,7 @@ public class PrestitoService {
             Log.d("prestio-service", ex.getMessage());
         }
 
-        return new StatusResponse(false, "Errore durante la richiesta");
+        return null;
     }
 
 }

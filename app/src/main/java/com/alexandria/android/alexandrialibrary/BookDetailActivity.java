@@ -19,11 +19,10 @@ import com.alexandria.android.alexandrialibrary.fragment.DialogAskUser;
 import com.alexandria.android.alexandrialibrary.helper.GlobalSettings;
 import com.alexandria.android.alexandrialibrary.model.Libro;
 import com.alexandria.android.alexandrialibrary.model.LibroAction;
-import com.alexandria.android.alexandrialibrary.model.StatusResponse;
 import com.google.gson.Gson;
 
-public class BookDetailActivity extends AppCompatActivity implements DialogAskUser.DialogAskUserListener {
-    private LibroAction libroAction;
+public class BookDetailActivity extends AppCompatActivity {
+    private Libro libro;
     private Activity activity;
     private Button actionButton;
 
@@ -35,8 +34,7 @@ public class BookDetailActivity extends AppCompatActivity implements DialogAskUs
         setContentView(R.layout.activity_book_detail);
         Intent intent = getIntent();
 
-        libroAction = new Gson().fromJson(intent.getStringExtra("libroAction"), LibroAction.class);
-        Libro libro = libroAction.getLibro();
+        libro = new Gson().fromJson(intent.getStringExtra("libro"), Libro.class);
 
         updateViewText();
 
@@ -65,26 +63,14 @@ public class BookDetailActivity extends AppCompatActivity implements DialogAskUs
 
         actionButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                String action = libroAction.getAction();
-                boolean isAdministrator = GlobalSettings.isAdministrator(getApplicationContext());
-
-                if (action.equals(LibroAction.PRESTA) && isAdministrator) {
-                    showDialogAskUser(action, libroAction.getLibro().getId());
-                    return;
-                }
-
                 int idUtente = GlobalSettings.getIdUtente(view.getContext());
-                createActionTask(action, libroAction.getLibro().getId(), idUtente);
-            }
-        });
-    }
+                String action = libro.isDisponibile() ? LibroAction.PRESTA : LibroAction.PRESTA;
+                ActionTask task = new ActionTask(activity, libro.getId(), idUtente);
 
-    private void createActionTask(String action, int idLibro, int idUtente) {
-        ActionTask task = new ActionTask(actionButton, idLibro, idUtente);
-        task.setOnActionExecuted(new BookListListener() {
-            @Override
-            public void onActionExecuted(View view, StatusResponse statusResponse) {
-                Toast.makeText(view.getContext(), statusResponse.getMessaggio(), Toast.LENGTH_SHORT).show();
+                task.setOnActionExecuted(new BookListListener() {
+                    @Override
+                    public void onActionExecuted(LibroAction libroAction) {
+                        Toast.makeText(view.getContext(), statusResponse.getMessaggio(), Toast.LENGTH_SHORT).show();
 
                 if (statusResponse.isDone()) {
                     String newAction = view.getTag().equals(LibroAction.PRESTA) ? LibroAction.RESTITUISCI : LibroAction.PRESTA;
@@ -92,6 +78,10 @@ public class BookDetailActivity extends AppCompatActivity implements DialogAskUs
                     actionButton.setText(newAction);
                 }
                 actionButton.setEnabled(true);
+                    }
+                });
+
+                task.execute(action);
             }
         });
 
@@ -120,7 +110,6 @@ public class BookDetailActivity extends AppCompatActivity implements DialogAskUs
         TextView editore = findViewById(R.id.book_detail_editore);
         TextView descrizione = findViewById(R.id.book_detail_description);
 
-        Libro libro = libroAction.getLibro();
         titolo.setText(libro.getTitolo());
         autori.setText(libro.getAutori());
         editore.setText(libro.getEditore());

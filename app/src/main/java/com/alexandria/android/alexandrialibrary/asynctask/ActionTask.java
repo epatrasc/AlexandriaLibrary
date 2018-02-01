@@ -20,23 +20,23 @@ import com.alexandria.android.alexandrialibrary.model.StatusResponse;
 import com.alexandria.android.alexandrialibrary.service.PrestitiService;
 import com.alexandria.android.alexandrialibrary.service.PrestitoService;
 
-public class ActionTask extends AsyncTask<String, Void, StatusResponse> {
-    private View view;
+public class ActionTask extends AsyncTask<String, Void, LibroAction> {
+    private Activity activity;
     private BookListListener listener;
     private int idLibro;
     private int idUtente;
     private PrestitoService service = null;
 
-    public ActionTask(View view, int idLibro, int idUtente) {
-        this.view = view;
+    public ActionTask(Activity activity, int idLibro, int idUtente) {
+        this.activity = activity;
         this.idLibro = idLibro;
         this.idUtente = idUtente;
-        this.service = new PrestitoService(view.getContext());
+        this.service = new PrestitoService(activity.getApplicationContext());
         this.listener = null;
     }
 
     @Override
-    protected StatusResponse doInBackground(String... params) {
+    protected LibroAction doInBackground(String... params) {
         String action = params != null ? params[0] : null;
 
         if (action == null) return null;
@@ -48,9 +48,9 @@ public class ActionTask extends AsyncTask<String, Void, StatusResponse> {
     }
 
     @Override
-    protected void onPostExecute(final StatusResponse statusResponse) {
+    protected void onPostExecute(final LibroAction libroAction) {
         if (listener != null) {
-            listener.onActionExecuted(view, statusResponse);
+            listener.onActionExecuted(libroAction);
         }
     }
 

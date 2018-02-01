@@ -9,16 +9,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alexandria.android.alexandrialibrary.R;
-import com.alexandria.android.alexandrialibrary.adaptor.listener.BookListListener;
 import com.alexandria.android.alexandrialibrary.asynctask.ImageLoaderTask;
 import com.alexandria.android.alexandrialibrary.asynctask.ActionTask;
-import com.alexandria.android.alexandrialibrary.helper.GlobalSettings;
-import com.alexandria.android.alexandrialibrary.model.LibroAction;
 import com.alexandria.android.alexandrialibrary.model.Prestito;
-import com.alexandria.android.alexandrialibrary.model.StatusResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,31 +64,16 @@ public class PrestitiListAdapter extends ArrayAdapter<Prestito> {
         imageLoader.DisplayImage("http://lorempixel.com/400/200/city/?xx="+position, imageView);
 
         // restituisci button
-        final Button restituisciButton = rowView.findViewById(R.id.restituisci_button);
+        Button restituisciButton = rowView.findViewById(R.id.restituisci_button);
         restituisciButton.setVisibility(Button.GONE);
         if (!prestito.isRestituito()) {
             restituisciButton.setVisibility(Button.VISIBLE);
             restituisciButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
                     Prestito prestito = prestiti.get(position);
-                    int idUtente = GlobalSettings.getIdUtente(context);
-                    ActionTask task = new ActionTask(restituisciButton, prestito.getIdLibro(), idUtente);
 
-                    // set task action listener
-                    task.setOnActionExecuted(new BookListListener() {
-                        @Override
-                        public void onActionExecuted(View  view, StatusResponse statusResponse) {
-                            Toast.makeText(context.getApplicationContext(), statusResponse.getMessaggio(), Toast.LENGTH_SHORT).show();
-
-                            if(statusResponse.isDone()){
-                               view.setVisibility(View.INVISIBLE);
-                            }else{
-                                view.setEnabled(true);
-                            }
-                        }
-                    });
-
-                    task.execute(LibroAction.RESTITUISCI);
+                    ActionTask task = new ActionTask(view.getContext(), prestito.getIdLibro());
+                    task.execute(ActionTask.ACTION_RESTITUISCI);
                 }
             });
         }
