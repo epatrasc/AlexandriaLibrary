@@ -65,6 +65,9 @@ public class BookDetailActivity extends AppCompatActivity {
 
         actionButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), AskUserActivity.class);
+                startActivity(intent);
+
                 int idUtente =session.getIdUtente();
                 String action = libroAction.getAction();
                 ActionTask task = new ActionTask(actionButton, libroAction.getLibro().getId(), idUtente);

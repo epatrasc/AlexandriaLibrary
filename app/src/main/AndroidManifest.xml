@@ -18,32 +18,38 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <!-- Login Activity-->
+        <!-- Login Activity -->
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <!--Main Activity-->
+        <!-- Main Activity -->
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <!-- BookDetailActivity-->
+        <!-- BookDetailActivity -->
         <activity android:name=".BookDetailActivity" />
 
         <!-- PrestitiActivity -->
         <activity
             android:name=".PrestitiActivity"
             android:label="@string/title_activity_prestiti"
-            android:parentActivityName="com.alexandria.android.alexandrialibrary.MainActivity">
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.alexandria.android.alexandrialibrary.MainActivity" />
         </activity>
+        <activity
+            android:name=".AskUserActivity"
+            android:label="@string/title_activity_ask_user"
+            android:parentActivityName="com.alexandria.android.alexandrialibrary.BookDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

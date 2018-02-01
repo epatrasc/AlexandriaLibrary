@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alexandria.android.alexandrialibrary.AskUserActivity;
 import com.alexandria.android.alexandrialibrary.BookDetailActivity;
 import com.alexandria.android.alexandrialibrary.R;
 
@@ -80,7 +81,8 @@ public class BookListAdapter extends ArrayAdapter<LibroAction> {
         actionButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 view.setEnabled(false);
-
+                Intent intent = new Intent(context.getApplicationContext(), AskUserActivity.class);
+                context.startActivity(intent);
                 int idUtente = session.getIdUtente();
                 String action = (String) view.getTag();
                 Libro libro = libriAction.get(position).getLibro();
