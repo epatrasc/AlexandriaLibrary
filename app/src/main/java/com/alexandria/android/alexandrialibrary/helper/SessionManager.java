@@ -24,11 +24,11 @@ public class SessionManager {
     int PRIVATE_MODE = 0;
 
     // Shared preferences file name
-    private static final String PREF_NAME = Resources.getSystem().getString(R.string.app_share_base);
-    private static final String KEY_IS_LOGGED_IN = Resources.getSystem().getString(R.string.shared_preferences_is_logged);
-    private static final String KEY_UTENTE = Resources.getSystem().getString(R.string.shared_preferences_utente);
-    private static final String KEY_ID_UTENTE = Resources.getSystem().getString(R.string.shared_preferences_id_utente);
-    private static final String KEY_IS_ADMIN = Resources.getSystem().getString(R.string.shared_preferences_is_admin);
+    private static final String PREF_NAME = "com.alexandria.android.alexandrialibrary";
+    private static final String KEY_IS_LOGGED_IN = "isLogged";
+    private static final String KEY_UTENTE = "utente";
+    private static final String KEY_ID_UTENTE = "idUtente";
+    private static final String KEY_IS_ADMIN = "isAdmin";
 
     public SessionManager(Context context) {
         this._context = context;

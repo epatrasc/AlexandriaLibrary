@@ -63,7 +63,7 @@ public class BookDetailActivity extends AppCompatActivity {
         actionButton.setText(actionLabel);
         actionButton.setEnabled(!action.equals(LibroAction.NO_ACTION));
 
-        backButton.setOnClickListener(new View.OnClickListener() {
+        actionButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 int idUtente =session.getIdUtente();
                 String action = libroAction.getAction();

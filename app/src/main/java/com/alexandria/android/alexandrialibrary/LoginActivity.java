@@ -324,8 +324,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected void onPostExecute(final String result) {
             mAuthTask = null;
-            showProgress(false);
-
             if (result != null) {
                 try {
                     JSONObject o = new JSONObject(result);
@@ -350,6 +348,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 mPasswordView.setError(getString(R.string.error_incorrect_login));
                 mPasswordView.requestFocus();
             }
+
+            showProgress(false);
         }
 
         private void saveUtente(Utente utente){
