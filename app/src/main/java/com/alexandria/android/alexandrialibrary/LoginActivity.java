@@ -4,11 +4,9 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.LoaderManager.LoaderCallbacks;
-import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -29,6 +27,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.alexandria.android.alexandrialibrary.helper.HTTPClients;
+import com.alexandria.android.alexandrialibrary.helper.SessionManager;
 import com.alexandria.android.alexandrialibrary.helper.Utils;
 import com.alexandria.android.alexandrialibrary.model.Utente;
 import com.google.gson.Gson;
@@ -42,7 +41,6 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -66,11 +64,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private SessionManager session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        // session manager
+        session = new SessionManager(getApplicationContext());
 
         // Set up the login form.
         mUtenteView = (AutoCompleteTextView) findViewById(R.id.utente);
@@ -351,15 +353,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
         private void saveUtente(Utente utente){
-            SharedPreferences prefs = getSharedPreferences(getString(R.string.app_share_base), Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putBoolean(getString(R.string.shared_preferences_is_logged), true);
-            editor.putString(getString(R.string.shared_preferences_utente),new Gson().toJson(utente).toString());
-            editor.putInt(getString(R.string.shared_preferences_id_utente), utente.getId());
-            editor.putBoolean(getString(R.string.shared_preferences_is_admin), utente.isAmministratore());
-            editor.apply();
-
-            Log.d("SharedPreferences", Boolean.toString(prefs.getBoolean(getString(R.string.shared_preferences_is_logged),false)));
+            session.setisLoggedIn(true);
+            session.setIsAdministrator(utente.isAmministratore());
+            session.setIdUtente(utente.getId());
+            session.setUtente(utente);
         }
 
         @Override

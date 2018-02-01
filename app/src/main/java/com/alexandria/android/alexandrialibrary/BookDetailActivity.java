@@ -13,7 +13,7 @@ import android.widget.Toast;
 import com.alexandria.android.alexandrialibrary.adaptor.listener.BookListListener;
 import com.alexandria.android.alexandrialibrary.asynctask.ImageLoaderTask;
 import com.alexandria.android.alexandrialibrary.asynctask.ActionTask;
-import com.alexandria.android.alexandrialibrary.helper.GlobalSettings;
+import com.alexandria.android.alexandrialibrary.helper.SessionManager;
 import com.alexandria.android.alexandrialibrary.model.Libro;
 import com.alexandria.android.alexandrialibrary.model.LibroAction;
 import com.alexandria.android.alexandrialibrary.model.StatusResponse;
@@ -22,11 +22,15 @@ import com.google.gson.Gson;
 public class BookDetailActivity extends AppCompatActivity {
     private LibroAction libroAction;
     private Activity activity;
+    private SessionManager session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = this;
+
+        // session manager
+        session = new SessionManager(getApplicationContext());
 
         setContentView(R.layout.activity_book_detail);
         Intent intent = getIntent();
@@ -61,7 +65,7 @@ public class BookDetailActivity extends AppCompatActivity {
 
         backButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                int idUtente = GlobalSettings.getIdUtente(view.getContext());
+                int idUtente =session.getIdUtente();
                 String action = libroAction.getAction();
                 ActionTask task = new ActionTask(actionButton, libroAction.getLibro().getId(), idUtente);
 

@@ -15,7 +15,7 @@ import com.alexandria.android.alexandrialibrary.R;
 import com.alexandria.android.alexandrialibrary.adaptor.listener.BookListListener;
 import com.alexandria.android.alexandrialibrary.asynctask.ImageLoaderTask;
 import com.alexandria.android.alexandrialibrary.asynctask.ActionTask;
-import com.alexandria.android.alexandrialibrary.helper.GlobalSettings;
+import com.alexandria.android.alexandrialibrary.helper.SessionManager;
 import com.alexandria.android.alexandrialibrary.model.LibroAction;
 import com.alexandria.android.alexandrialibrary.model.Prestito;
 import com.alexandria.android.alexandrialibrary.model.StatusResponse;
@@ -30,6 +30,7 @@ public class PrestitiListAdapter extends ArrayAdapter<Prestito> {
     private static LayoutInflater inflater = null;
     private List<Prestito> prestiti = new ArrayList<>();
     public ImageLoaderTask imageLoader;
+    private SessionManager session;
 
     public PrestitiListAdapter(Activity context, List<Prestito> prestiti) {
         super(context, R.layout.catalogo_list, prestiti);
@@ -39,6 +40,7 @@ public class PrestitiListAdapter extends ArrayAdapter<Prestito> {
         this.urls = new String[prestiti.size()];
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.imageLoader = new ImageLoaderTask(context.getApplicationContext());
+        this.session = new SessionManager(context.getApplicationContext());
     }
 
     public View getView(final int position, View view, ViewGroup parent) {
@@ -76,7 +78,7 @@ public class PrestitiListAdapter extends ArrayAdapter<Prestito> {
             restituisciButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
                     Prestito prestito = prestiti.get(position);
-                    int idUtente = GlobalSettings.getIdUtente(context);
+                    int idUtente = session.getIdUtente();
                     ActionTask task = new ActionTask(restituisciButton, prestito.getIdLibro(), idUtente);
 
                     // set task action listener

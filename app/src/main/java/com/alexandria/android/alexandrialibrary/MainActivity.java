@@ -5,9 +5,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,8 +26,8 @@ import android.widget.TextView;
 
 import com.alexandria.android.alexandrialibrary.asynctask.CatalogoLibriTask;
 import com.alexandria.android.alexandrialibrary.helper.HTTPClients;
+import com.alexandria.android.alexandrialibrary.helper.SessionManager;
 import com.alexandria.android.alexandrialibrary.model.Utente;
-import com.google.gson.Gson;
 import com.koushikdutta.ion.Ion;
 
 import org.apache.commons.lang3.StringUtils;
@@ -42,6 +40,7 @@ public class MainActivity extends AppCompatActivity
     private View mProgressView;
     private ListView bookView = null;
     private Utente utente;
+    private SessionManager session;
 
     private Integer MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = PackageManager.PERMISSION_GRANTED;
 
@@ -49,7 +48,8 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        session = new SessionManager(getApplicationContext());
+        utente = session.getUtente();
         mProgressView = findViewById(R.id.main_progress);
         bookView = (ListView) findViewById(R.id.book_list);
 
@@ -65,9 +65,6 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        SharedPreferences prefs = getSharedPreferences(getString(R.string.app_share_base), Context.MODE_PRIVATE);
-        utente = new Gson().fromJson(prefs.getString(getString(R.string.shared_preferences_utente),null),Utente.class);
-
         View headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_main);
 
         TextView navUtete = headerLayout.findViewById(R.id.nav_header_utente_label);
@@ -82,10 +79,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void logout() {
-        SharedPreferences prefs = getSharedPreferences(getString(R.string.app_share_base), Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.clear();
-        editor.apply();
+        session.reset();
 
         DefaultHttpClient client = HTTPClients.getDefaultHttpClient();
         client.getCookieStore().clear();

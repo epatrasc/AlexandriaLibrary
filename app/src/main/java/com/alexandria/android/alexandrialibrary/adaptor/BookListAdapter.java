@@ -18,7 +18,7 @@ import com.alexandria.android.alexandrialibrary.R;
 import com.alexandria.android.alexandrialibrary.adaptor.listener.BookListListener;
 import com.alexandria.android.alexandrialibrary.asynctask.ImageLoaderTask;
 import com.alexandria.android.alexandrialibrary.asynctask.ActionTask;
-import com.alexandria.android.alexandrialibrary.helper.GlobalSettings;
+import com.alexandria.android.alexandrialibrary.helper.SessionManager;
 import com.alexandria.android.alexandrialibrary.model.Libro;
 import com.alexandria.android.alexandrialibrary.model.LibroAction;
 import com.alexandria.android.alexandrialibrary.model.StatusResponse;
@@ -34,6 +34,7 @@ public class BookListAdapter extends ArrayAdapter<LibroAction> {
     private static LayoutInflater inflater = null;
     private List<LibroAction> libriAction = new ArrayList<>();
     private ImageLoaderTask imageLoader;
+    private SessionManager session;
 
     public BookListAdapter(Activity context, List<LibroAction> libriAction) {
         super(context, R.layout.catalogo_list, libriAction);
@@ -43,6 +44,7 @@ public class BookListAdapter extends ArrayAdapter<LibroAction> {
         this.urls = new String[libriAction.size()];
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.imageLoader = new ImageLoaderTask(context.getApplicationContext());
+        this.session = new SessionManager(context.getApplicationContext());
     }
 
     public View getView(final int position, View view, ViewGroup parent) {
@@ -79,7 +81,7 @@ public class BookListAdapter extends ArrayAdapter<LibroAction> {
             public void onClick(View view) {
                 view.setEnabled(false);
 
-                int idUtente = GlobalSettings.getIdUtente(context);
+                int idUtente = session.getIdUtente();
                 String action = (String) view.getTag();
                 Libro libro = libriAction.get(position).getLibro();
 
