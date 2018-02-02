@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.alexandria.android.alexandrialibrary.R;
 import com.alexandria.android.alexandrialibrary.helper.HTTPClients;
+import com.alexandria.android.alexandrialibrary.helper.SessionManager;
 import com.alexandria.android.alexandrialibrary.helper.Utils;
 import com.alexandria.android.alexandrialibrary.model.Libro;
 import com.alexandria.android.alexandrialibrary.model.LibroAction;
@@ -29,18 +30,28 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CatalogoLibriService {
+public class CatalogoLibriService extends MainService{
     private final Context context;
     private String urlCatalogo;
+    private DefaultHttpClient client;
+    private boolean enableStub;
+    private SessionManager session;
 
-    public CatalogoLibriService(Context context){
+    public CatalogoLibriService(Context context) {
+        super(context);
         this.context = context;
+        this.client = HTTPClients.getDefaultHttpClient();
+        this.session = new SessionManager(context);
 
         String baseUrl = context.getString(R.string.upstream_base_url);
         this.urlCatalogo = baseUrl + context.getString(R.string.upstream_catalogo_visualizza_path);
     }
 
-    public List<LibroAction> getLibri(){
+    List<LibroAction> getLibri(){
+        if (session.isEnableStub()) {
+            return stub();
+        }
+
         try {
             // setup request
             DefaultHttpClient client = HTTPClients.getDefaultHttpClient();
@@ -77,7 +88,6 @@ public class CatalogoLibriService {
         }.getType());
     }
 
-    //TODO update the stub method to use LibroAction
     private List<Libro> stub() {
         String json = null;
         InputStream is = null;
@@ -97,5 +107,4 @@ public class CatalogoLibriService {
 
         return new ArrayList<>();
     }
-
 }

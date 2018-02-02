@@ -3,10 +3,8 @@ package com.alexandria.android.alexandrialibrary.helper;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.util.Log;
 
-import com.alexandria.android.alexandrialibrary.R;
 import com.alexandria.android.alexandrialibrary.model.Utente;
 import com.google.gson.Gson;
 
@@ -29,6 +27,7 @@ public class SessionManager {
     private static final String KEY_UTENTE = "utente";
     private static final String KEY_ID_UTENTE = "idUtente";
     private static final String KEY_IS_ADMIN = "isAdmin";
+    private static final String KEY_ENABLE_STUB = "enableStub";
 
     public SessionManager(Context context) {
         this._context = context;
@@ -41,6 +40,15 @@ public class SessionManager {
         editor.apply();
 
         Log.d(TAG, "Reset Session");
+    }
+
+    public void setEnableStub(boolean enableStub) {
+        editor.putBoolean(KEY_ENABLE_STUB, enableStub);
+
+        // commit changes
+        editor.commit();
+
+        Log.d(TAG, KEY_ENABLE_STUB + " session modified!");
     }
 
     public void setisLoggedIn(boolean isLoggedIn) {
@@ -77,6 +85,10 @@ public class SessionManager {
         editor.commit();
 
         Log.d(TAG, "User login session modified!");
+    }
+
+    public boolean isEnableStub() {
+        return pref.getBoolean(KEY_ENABLE_STUB, false);
     }
 
     public boolean isLoggedIn() {

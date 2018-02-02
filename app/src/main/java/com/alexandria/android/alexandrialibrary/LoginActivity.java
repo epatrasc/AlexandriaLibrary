@@ -158,7 +158,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
-    public void loginSuccess() {
+    public void     loginSuccess() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
@@ -278,29 +278,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected String doInBackground(Void... params) {
-            try {
-                // setup request
-                String loginUrl = getString(R.string.upstream_base_url) + getString(R.string.upstream_login_path);
-                DefaultHttpClient client =  HTTPClients.getDefaultHttpClient();
-                HttpPost post = new HttpPost(loginUrl);
 
-                //add request post body
-                List<NameValuePair> postParams = new ArrayList<>();
-                postParams.add(new BasicNameValuePair("nome", mUtente));
-                postParams.add(new BasicNameValuePair("password", mPassword));
-                postParams.add(new BasicNameValuePair("isAndroid", "true"));
-                post.setEntity(new UrlEncodedFormEntity(postParams));
-
-                HttpResponse response = client.execute(post);
-
-                // read response
-                InputStream in = new BufferedInputStream(response.getEntity().getContent());
-                return Utils.readStream(in);
-            } catch (MalformedURLException ex) {
-                return null;
-            } catch (IOException ex) {
-                return null;
-            }
         }
 
         private String getQuery(List<NameValuePair> params) throws UnsupportedEncodingException {
