@@ -2,9 +2,11 @@ package com.alexandria.android.alexandrialibrary;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -54,8 +56,7 @@ public class AskUserActivity extends AppCompatActivity {
                 String nomeUtente = (String) spinner.getSelectedItem();
                 int idUtente = spinnerMap.get(nomeUtente);
                 Toast.makeText(getApplicationContext(), nomeUtente + ": " + idUtente, Toast.LENGTH_SHORT).show();
-                goBack();
-                //TODO Task action
+                sendMessage();
             }
         });
 
@@ -66,6 +67,13 @@ public class AskUserActivity extends AppCompatActivity {
                 goBack();
             }
         });
+    }
+
+    private void sendMessage() {
+        Log.d("sender", "Broadcasting message");
+        Intent intent = new Intent("cconfirm-event");
+        intent.putExtra("libroAction", new Gson().toJson(libroAction));
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
     private void goBack() {
