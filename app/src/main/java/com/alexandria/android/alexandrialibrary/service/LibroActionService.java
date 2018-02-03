@@ -1,12 +1,14 @@
 package com.alexandria.android.alexandrialibrary.service;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.alexandria.android.alexandrialibrary.R;
 import com.alexandria.android.alexandrialibrary.helper.HTTPClients;
 import com.alexandria.android.alexandrialibrary.helper.SessionManager;
 import com.alexandria.android.alexandrialibrary.helper.Utils;
-import com.alexandria.android.alexandrialibrary.model.Utente;
+import com.alexandria.android.alexandrialibrary.model.LibroAction;
+import com.alexandria.android.alexandrialibrary.model.Prestito;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -17,8 +19,11 @@ import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -29,51 +34,63 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UtentiService extends MainService {
-    private final Context context;
+public class LibroActionService extends MainService {
+    private Context context;
     private String url;
     private DefaultHttpClient client;
     private boolean enableStub;
     private SessionManager session;
 
-    public UtentiService(Context context) {
+    public LibroActionService(Context context) {
         super(context);
         this.context = context;
         this.client = HTTPClients.getDefaultHttpClient();
         this.session = new SessionManager(context);
 
         String baseUrl = context.getString(R.string.upstream_base_url);
-        this.url = baseUrl + context.getString(R.string.upstream_utenti_cliente);
+        this.url = baseUrl + context.getString(R.string.upstream_prestito_presta_path);
+
     }
 
-    public List<Utente> getAllUsers() {
+    public LibroAction get(int idLibro) {
         if (session.isEnableStub()) {
             return stub();
         }
 
         try {
             // setup request
-            HttpGet get = new HttpGet(url);
-            HttpResponse response = client.execute(get);
+            HttpPost post = new HttpPost(url);
+
+            //add request post body
+            List<NameValuePair> postParams = new ArrayList<>();
+            postParams.add(new BasicNameValuePair("idLibro", Integer.toString(idLibro)));
+            postParams.add(new BasicNameValuePair("isAndroid", "true"));
+            post.setEntity(new UrlEncodedFormEntity(postParams));
 
             // read response
+            HttpResponse response = client.execute(post);
             InputStream in = new BufferedInputStream(response.getEntity().getContent());
 
             String json = Utils.readStream(in);
             if (!StringUtils.isEmpty(json)) {
-                return getUtentiFromJson(json);
+                return new Gson().fromJson(json, LibroAction.class);
             }
 
         } catch (MalformedURLException ex) {
-            return null;
+            Log.d("prestio-service", ex.getMessage());
         } catch (IOException ex) {
-            return null;
+            Log.d("prestio-service", ex.getMessage());
         }
 
-        return new ArrayList<>();
+        return null;
     }
 
-    private List<Utente> getUtentiFromJson(String json) {
+    private LibroAction stub() {
+        String json = getRawResource(R.raw.libro_action);
+        return getLibroActionFromJson(json);
+    }
+
+    private LibroAction getLibroActionFromJson(String json) {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
             public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
@@ -82,13 +99,6 @@ public class UtentiService extends MainService {
         });
 
         Gson gson = builder.create();
-        return gson.fromJson(json, new TypeToken<List<Utente>>() {
-        }.getType());
+        return gson.fromJson(json, LibroAction.class);
     }
-
-    private List<Utente> stub() {
-        String json = getRawResource(R.raw.utenti);
-        return getUtentiFromJson(json);
-    }
-
 }

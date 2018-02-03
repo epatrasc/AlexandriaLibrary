@@ -1,0 +1,12 @@
+{
+    "libro": {
+      "id": 1,
+      "titolo": "Alices adventures in Wonderland ",
+      "descrizione": "A little girl falls down a rabbit hole and discovers a world of nonsensical and amusing characters.",
+      "imageUrl": "http://covers.openlibrary.org/b/OLID/OL1396620M-M.jpg",
+      "autori": "Lewis Carroll",
+      "editore": "Dover",
+      "disponibile": true
+    },
+    "action": "presta"
+  }

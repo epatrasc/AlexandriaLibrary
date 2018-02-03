@@ -60,7 +60,7 @@ public class BookListAdapter extends ArrayAdapter<LibroAction> {
         TextView txtAutori = (TextView) rowView.findViewById(R.id.list_book_autori);
         TextView txtEditore = (TextView) rowView.findViewById(R.id.list_book_editore);
 
-        Libro libro = libriAction.get(position).getLibro();
+        final Libro libro = libriAction.get(position).getLibro();
 
         txtTitle.setText(libro.getTitolo());
         txtAutori.setText(libro.getAutori());
@@ -116,7 +116,7 @@ public class BookListAdapter extends ArrayAdapter<LibroAction> {
         detailButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent intent = new Intent(context, BookDetailActivity.class);
-                intent.putExtra("libroAction", new Gson().toJson(libriAction.get(position)));
+                intent.putExtra("idLibro", libriAction.get(position).getLibro().getId());
                 context.startActivity(intent);
             }
         });

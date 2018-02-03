@@ -38,7 +38,7 @@ public class LoginService extends MainService {
         this.loginUrl = baseUrl + context.getString(R.string.upstream_login_path);
     }
 
-    public String execute(String utente, String password) {
+    public String getUtente(String utente, String password) {
         if (session.isEnableStub()) {
             return stub();
         }

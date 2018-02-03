@@ -30,7 +30,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CatalogoLibriService extends MainService{
+public class CatalogoLibriService extends MainService {
     private final Context context;
     private String urlCatalogo;
     private DefaultHttpClient client;
@@ -47,14 +47,13 @@ public class CatalogoLibriService extends MainService{
         this.urlCatalogo = baseUrl + context.getString(R.string.upstream_catalogo_visualizza_path);
     }
 
-    List<LibroAction> getLibri(){
+    public List<LibroAction> getLibri() {
         if (session.isEnableStub()) {
             return stub();
         }
 
         try {
             // setup request
-            DefaultHttpClient client = HTTPClients.getDefaultHttpClient();
             HttpGet get = new HttpGet(urlCatalogo);
             HttpResponse response = client.execute(get);
 
@@ -88,23 +87,8 @@ public class CatalogoLibriService extends MainService{
         }.getType());
     }
 
-    private List<Libro> stub() {
-        String json = null;
-        InputStream is = null;
-        try {
-            is = context.getResources().openRawResource(R.raw.libri);
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-
-            json = new String(buffer, "UTF-8");
-
-            return   new Gson().fromJson(json,  new TypeToken<List<Libro>>(){}.getType());
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        return new ArrayList<>();
+    private List<LibroAction> stub() {
+        String json = getRawResource(R.raw.libri_action);
+        return getCatalogoFromJson(json);
     }
 }

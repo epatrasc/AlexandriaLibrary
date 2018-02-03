@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.alexandria.android.alexandrialibrary.R;
 import com.alexandria.android.alexandrialibrary.helper.HTTPClients;
+import com.alexandria.android.alexandrialibrary.helper.SessionManager;
 import com.alexandria.android.alexandrialibrary.helper.Utils;
 import com.alexandria.android.alexandrialibrary.model.Prestito;
 import com.google.gson.Gson;
@@ -32,23 +33,31 @@ import java.util.ArrayList;
 import java.sql.Date;
 import java.util.List;
 
-public class PrestitiService {
+public class PrestitiService extends MainService {
     private Context context;
     private String urlRequestPrestiti;
+    private DefaultHttpClient client;
+    private boolean enableStub;
+    private SessionManager session;
 
     public PrestitiService(Context context) {
+        super(context);
         this.context = context;
+        this.client = HTTPClients.getDefaultHttpClient();
+        this.session = new SessionManager(context);
 
         String baseUrl = context.getString(R.string.upstream_base_url);
         String path = context.getString(R.string.upstream_prestiti_path);
         this.urlRequestPrestiti = baseUrl + path;
-
     }
 
     public List<Prestito> getPrestiti() {
+        if (session.isEnableStub()) {
+            return stub();
+        }
+
         try {
             // setup request
-            DefaultHttpClient client = HTTPClients.getDefaultHttpClient();
             HttpGet get = new HttpGet(urlRequestPrestiti);
 
             HttpResponse response = client.execute(get);
@@ -71,21 +80,8 @@ public class PrestitiService {
     }
 
     private List<Prestito> stub() {
-        String json = null;
-        InputStream is = null;
-        try {
-            is = context.getResources().openRawResource(R.raw.prestiti);
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-
-            return getPrestitiFromJson(new String(buffer, "UTF-8"));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        return new ArrayList<>();
+        String json = getRawResource(R.raw.prestiti);
+        return getPrestitiFromJson(json);
     }
 
     private List<Prestito> getPrestitiFromJson(String json) {

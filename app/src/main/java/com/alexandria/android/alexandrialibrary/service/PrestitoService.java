@@ -5,9 +5,17 @@ import android.util.Log;
 
 import com.alexandria.android.alexandrialibrary.R;
 import com.alexandria.android.alexandrialibrary.helper.HTTPClients;
+import com.alexandria.android.alexandrialibrary.helper.SessionManager;
 import com.alexandria.android.alexandrialibrary.helper.Utils;
+import com.alexandria.android.alexandrialibrary.model.Prestito;
 import com.alexandria.android.alexandrialibrary.model.StatusResponse;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
@@ -20,7 +28,9 @@ import org.apache.http.message.BasicNameValuePair;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.net.MalformedURLException;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,10 +38,15 @@ public class PrestitoService {
     private Context context;
     private String urlPresta;
     private String urlRestituisci;
+    private DefaultHttpClient client;
+    private boolean enableStub;
+    private SessionManager session;
 
-
-    public PrestitoService(Context context) {
+    public PrestitoService(Context context){
         this.context = context;
+        this.client = HTTPClients.getDefaultHttpClient();
+        this.session = new SessionManager(context);
+
         String baseUrl = context.getString(R.string.upstream_base_url);
         this.urlPresta = baseUrl + context.getString(R.string.upstream_prestito_presta_path);
         this.urlRestituisci = baseUrl + context.getString(R.string.upstream_prestito_restituisci_path);
@@ -39,9 +54,12 @@ public class PrestitoService {
     }
 
     public StatusResponse presta(int idLibro, int idUtente) {
+        if (session.isEnableStub()) {
+            return stub();
+        }
+
         try {
             // setup request
-            DefaultHttpClient client = HTTPClients.getDefaultHttpClient();
             HttpPost post = new HttpPost(urlPresta);
 
             //add request post body
@@ -70,9 +88,12 @@ public class PrestitoService {
     }
 
     public StatusResponse restituisci(int idLibro) {
+        if (session.isEnableStub()) {
+            return stub();
+        }
+
         try {
             // setup request
-            DefaultHttpClient client = HTTPClients.getDefaultHttpClient();
             HttpPost post = new HttpPost(urlRestituisci);
 
             //add request post body
@@ -99,4 +120,7 @@ public class PrestitoService {
         return new StatusResponse(false, "Errore durante la richiesta");
     }
 
+    private StatusResponse stub() {
+        return  new StatusResponse(true,"OK");
+    }
 }

@@ -32,22 +32,9 @@ public class CatalogoLibriTask extends AsyncTask<Void, Void, List<LibroAction>> 
         activity.showProgress(false);
 
         if (libriAction != null && libriAction.size() > 0) {
-            BookListAdapter adapter = new BookListAdapter(activity, libriAction);
-
-            activity.getBookView().setAdapter(adapter);
-            activity.getBookView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view,
-                                        int position, long id) {
-                    Libro libro = libriAction.get(+position).getLibro();
-                    Toast.makeText(activity.getApplicationContext(), libro.getTitolo(), Toast.LENGTH_SHORT).show();
-
-                }
-            });
+            activity.updateBookView(new BookListAdapter(activity, libriAction));
         } else {
             onCancelled();
-            // TODO visualizza messaggio catalogo vuoto
         }
     }
 

@@ -21,12 +21,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.alexandria.android.alexandrialibrary.adaptor.BookListAdapter;
 import com.alexandria.android.alexandrialibrary.asynctask.CatalogoLibriTask;
 import com.alexandria.android.alexandrialibrary.helper.HTTPClients;
 import com.alexandria.android.alexandrialibrary.helper.SessionManager;
+import com.alexandria.android.alexandrialibrary.model.Libro;
 import com.alexandria.android.alexandrialibrary.model.Utente;
 import com.koushikdutta.ion.Ion;
 
@@ -86,14 +90,14 @@ public class MainActivity extends AppCompatActivity
         logoutUpstreamRequest();
     }
 
-    private void logoutUpstreamRequest()   {
-        try{
+    private void logoutUpstreamRequest() {
+        try {
             Ion.with(this)
                     .load(getString(R.string.upstream_base_url) + getString(R.string.upstream_logout_path))
-                    .addQuery("isAndroid","true")
+                    .addQuery("isAndroid", "true")
                     .asString()
                     .get();
-        }catch (InterruptedException | ExecutionException ex){
+        } catch (InterruptedException | ExecutionException ex) {
             Log.d("error", ex.getMessage());
         }
 
@@ -224,7 +228,6 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -257,11 +260,7 @@ public class MainActivity extends AppCompatActivity
         super.onDestroy();
     }
 
-    public ListView getBookView() {
-        return bookView;
-    }
-
-    public void setBookView(ListView bookView) {
-        this.bookView = bookView;
+    public void updateBookView(BookListAdapter adapter) {
+        bookView.setAdapter(adapter);
     }
 }

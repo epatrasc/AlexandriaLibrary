@@ -30,6 +30,7 @@ import com.alexandria.android.alexandrialibrary.helper.HTTPClients;
 import com.alexandria.android.alexandrialibrary.helper.SessionManager;
 import com.alexandria.android.alexandrialibrary.helper.Utils;
 import com.alexandria.android.alexandrialibrary.model.Utente;
+import com.alexandria.android.alexandrialibrary.service.LoginService;
 import com.google.gson.Gson;
 
 import org.apache.http.HttpResponse;
@@ -73,6 +74,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         // session manager
         session = new SessionManager(getApplicationContext());
+        session.setEnableStub(true);
 
         // Set up the login form.
         mUtenteView = (AutoCompleteTextView) findViewById(R.id.utente);
@@ -121,8 +123,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String utente = mUtenteView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        String utente = "alessandro"; //mUtenteView.getText().toString();
+        String password = "alessandro"; //mPasswordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -134,7 +136,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             cancel = true;
         }
 
-        // Check for a valid utente
+        // Check for a valid utenteq
         if (TextUtils.isEmpty(utente)) {
             mUtenteView.setError(getString(R.string.error_field_required));
             focusView = mUtenteView;
@@ -158,7 +160,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
-    public void     loginSuccess() {
+    public void loginSuccess() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
@@ -262,10 +264,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         int IS_PRIMARY = 1;
     }
 
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
     public class UserLoginTask extends AsyncTask<Void, Void, String> {
 
         private final String mUtente;
@@ -278,7 +276,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected String doInBackground(Void... params) {
-
+            LoginService service = new LoginService(getApplicationContext());
+            return service.getUtente(mUtente, mPassword);
         }
 
         private String getQuery(List<NameValuePair> params) throws UnsupportedEncodingException {
@@ -309,8 +308,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                     if (done) {
                         Log.d("LOGIN", "Login avvenuto con successo");
-                        Gson gson = new Gson();
-                        Utente utente = gson.fromJson(o.optString("utente"), Utente.class);
+                        Utente utente = new Gson().fromJson(o.optString("utente"), Utente.class);
 
                         saveUtente(utente);
                         loginSuccess();
