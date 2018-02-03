@@ -35,7 +35,6 @@ public class BookListAdapter extends ArrayAdapter<LibroAction> {
     private static LayoutInflater inflater = null;
     private List<LibroAction> libriAction = new ArrayList<>();
     private ImageLoaderTask imageLoader;
-    private SessionManager session;
 
     public BookListAdapter(Activity context, List<LibroAction> libriAction) {
         super(context, R.layout.catalogo_list, libriAction);
@@ -45,7 +44,6 @@ public class BookListAdapter extends ArrayAdapter<LibroAction> {
         this.urls = new String[libriAction.size()];
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.imageLoader = new ImageLoaderTask(context.getApplicationContext());
-        this.session = new SessionManager(context.getApplicationContext());
     }
 
     public View getView(final int position, View view, ViewGroup parent) {
@@ -67,48 +65,6 @@ public class BookListAdapter extends ArrayAdapter<LibroAction> {
         txtEditore.setText(libro.getEditore());
 
         imageLoader.DisplayImage(libro.getImageUrl(), imageView);
-
-        // action button
-        String action = libriAction.get(position).getAction();
-        String actionLabel = action.equals(LibroAction.NO_ACTION) ? "In Prestito" : action;
-
-        final Button actionButton = rowView.findViewById(R.id.action_button);
-        actionButton.setTag(action);
-        actionButton.setText(actionLabel);
-        actionButton.setEnabled(!action.equals(LibroAction.NO_ACTION));
-
-
-        actionButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                view.setEnabled(false);
-                Intent intent = new Intent(context.getApplicationContext(), AskUserActivity.class);
-                context.startActivity(intent);
-                int idUtente = session.getIdUtente();
-                String action = (String) view.getTag();
-                Libro libro = libriAction.get(position).getLibro();
-
-                if (!action.equals(LibroAction.NO_ACTION)) {
-                    ActionTask task = new ActionTask(actionButton, libro.getId(), idUtente);
-
-                    // set task action listener
-                    task.setOnActionExecuted(new BookListListener() {
-                        @Override
-                        public void onActionExecuted(View view, StatusResponse statusResponse) {
-                            Toast.makeText(context.getApplicationContext(), statusResponse.getMessaggio(), Toast.LENGTH_SHORT).show();
-
-                            if (statusResponse.isDone()) {
-                                String newAction = view.getTag().equals(LibroAction.PRESTA) ? LibroAction.RESTITUISCI : LibroAction.PRESTA;
-                                view.setTag(newAction);
-                                actionButton.setText(newAction);
-                            }
-                            view.setEnabled(true);
-                        }
-                    });
-                    task.execute(action);
-                }
-
-            }
-        });
 
         // detail button
         Button detailButton = rowView.findViewById(R.id.detail_button);
