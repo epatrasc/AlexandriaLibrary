@@ -21,6 +21,7 @@ import com.alexandria.android.alexandrialibrary.service.LoginService;
 import com.alexandria.android.alexandrialibrary.service.UtentiService;
 import com.google.gson.Gson;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.NameValuePair;
 import org.json.JSONObject;
 
@@ -84,8 +85,9 @@ public class AskUserActivity extends AppCompatActivity {
         spinnerMap = new HashMap<String, Integer>();
         for(int i=0; i<utenti.size();i++){
             Utente utente = utenti.get(i);
-            spinnerMap.put(utente.getNome(), utente.getId());
-            spinnerArray[i] = utente.getNome();
+            String nome = StringUtils.capitalize(utente.getNome());
+            spinnerMap.put(nome, utente.getId());
+            spinnerArray[i] = nome;
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, spinnerArray);

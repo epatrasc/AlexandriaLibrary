@@ -74,7 +74,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         // session manager
         session = new SessionManager(getApplicationContext());
-        session.setEnableStub(true);
+        session.setEnableStub(false);
 
         // Set up the login form.
         mUtenteView = (AutoCompleteTextView) findViewById(R.id.utente);
@@ -123,8 +123,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String utente = "alessandro"; //mUtenteView.getText().toString();
-        String password = "alessandro"; //mPasswordView.getText().toString();
+        String utente =mUtenteView.getText().toString();
+        String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -278,24 +278,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         protected String doInBackground(Void... params) {
             LoginService service = new LoginService(getApplicationContext());
             return service.getUtente(mUtente, mPassword);
-        }
-
-        private String getQuery(List<NameValuePair> params) throws UnsupportedEncodingException {
-            StringBuilder result = new StringBuilder();
-            boolean first = true;
-
-            for (NameValuePair pair : params) {
-                if (first)
-                    first = false;
-                else
-                    result.append("&");
-
-                result.append(URLEncoder.encode(pair.getName(), "UTF-8"));
-                result.append("=");
-                result.append(URLEncoder.encode(pair.getValue(), "UTF-8"));
-            }
-
-            return result.toString();
         }
 
         @Override

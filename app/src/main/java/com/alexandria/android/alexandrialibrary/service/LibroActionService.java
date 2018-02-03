@@ -48,7 +48,7 @@ public class LibroActionService extends MainService {
         this.session = new SessionManager(context);
 
         String baseUrl = context.getString(R.string.upstream_base_url);
-        this.url = baseUrl + context.getString(R.string.upstream_prestito_presta_path);
+        this.url = baseUrl + context.getString(R.string.upstream_libro_visualizza);
 
     }
 

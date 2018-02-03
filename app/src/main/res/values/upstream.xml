@@ -14,6 +14,7 @@
     <string name="upstream_libro_action_path">/libro/dettaglio</string>
     <string name="upstream_prestito_restituisci_path">/prestito/restituisci</string>
     <string name="upstream_catalogo_visualizza_path">/catalogo/visualizza?isAndroid=true</string>
+    <string name="upstream_libro_visualizza">/libro/visualizza?isAndroid=true</string>
     <string name="upstream_utenti_cliente">/utenti/cliente?isAndroid=true</string>
 
 </resources>

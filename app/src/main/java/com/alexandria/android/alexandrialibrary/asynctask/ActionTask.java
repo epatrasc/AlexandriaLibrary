@@ -15,6 +15,13 @@ public class ActionTask extends AsyncTask<String, Void, StatusResponse> {
     private int idUtente;
     private PrestitoService service = null;
 
+    public ActionTask(View view, int idLibro) {
+        this.view = view;
+        this.idLibro = idLibro;
+        this.service = new PrestitoService(view.getContext());
+        this.listener = null;
+    }
+
     public ActionTask(View view, int idLibro, int idUtente) {
         this.view = view;
         this.idLibro = idLibro;

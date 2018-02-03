@@ -78,7 +78,4 @@ public class PrestitiActivity extends AppCompatActivity {
         return prestitiView;
     }
 
-    public void setPrestitiView(ListView prestitiView) {
-        this.prestitiView = prestitiView;
-    }
 }

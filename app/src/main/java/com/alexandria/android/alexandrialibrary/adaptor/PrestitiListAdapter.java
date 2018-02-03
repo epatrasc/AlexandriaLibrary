@@ -20,6 +20,8 @@ import com.alexandria.android.alexandrialibrary.model.LibroAction;
 import com.alexandria.android.alexandrialibrary.model.Prestito;
 import com.alexandria.android.alexandrialibrary.model.StatusResponse;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,8 +31,9 @@ public class PrestitiListAdapter extends ArrayAdapter<Prestito> {
     private final String[] urls;
     private static LayoutInflater inflater = null;
     private List<Prestito> prestiti = new ArrayList<>();
-    public ImageLoaderTask imageLoader;
+    private ImageLoaderTask imageLoader;
     private SessionManager session;
+    private TextView txtStato;
 
     public PrestitiListAdapter(Activity context, List<Prestito> prestiti) {
         super(context, R.layout.catalogo_list, prestiti);
@@ -54,21 +57,29 @@ public class PrestitiListAdapter extends ArrayAdapter<Prestito> {
         TextView txtUtente = (TextView) rowView.findViewById(R.id.prestiti_list_utente);
         TextView txtDataPrestito = (TextView) rowView.findViewById(R.id.prestiti_list_data_prestito);
         TextView txtDataRestituzione = (TextView) rowView.findViewById(R.id.prestiti_list_data_restituzione);
-        TextView txtStato = (TextView) rowView.findViewById(R.id.prestiti_list_stato);
 
         Prestito prestito = prestiti.get(position);
 
-        String idUtente = Integer.toString(prestito.getIdUtente());
+        String nomeUtente = prestito.getNomeUtente();
         String dataPrestito = prestito.getDataPrestito() != null ? prestito.getDataPrestito().toString() : "-";
         String dataRestituzione = prestito.getDataRestituzione() != null ? prestito.getDataRestituzione().toString() : "-";
 
-        txtUtente.setText(idUtente);
+        View rowUtente = rowView.findViewById(R.id.prestito_row_utente);
+        rowUtente.setVisibility(View.INVISIBLE);
+
+        if (session.isAdministrator()) {
+            txtUtente.setText(StringUtils.capitalize(nomeUtente));
+            rowUtente.setVisibility(View.VISIBLE);
+        }
+
         txtDataPrestito.setText(dataPrestito);
         txtDataRestituzione.setText(dataRestituzione);
+
+        txtStato = (TextView) rowView.findViewById(R.id.prestiti_list_stato);
         txtStato.setText(prestito.isRestituito() ? "Restituito" : "In prestito");
 
         //TODO aggiornare model e service in modo che ritorni l'immagine del libro
-        imageLoader.DisplayImage("http://lorempixel.com/400/200/city/?xx="+position, imageView);
+        imageLoader.DisplayImage(prestito.getUrlImageLibro(), imageView);
 
         // restituisci button
         final Button restituisciButton = rowView.findViewById(R.id.restituisci_button);
@@ -78,18 +89,17 @@ public class PrestitiListAdapter extends ArrayAdapter<Prestito> {
             restituisciButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
                     Prestito prestito = prestiti.get(position);
-                    int idUtente = session.getIdUtente();
-                    ActionTask task = new ActionTask(restituisciButton, prestito.getIdLibro(), idUtente);
-
+                    ActionTask task = new ActionTask(restituisciButton, prestito.getIdLibro());
                     // set task action listener
                     task.setOnActionExecuted(new BookListListener() {
                         @Override
-                        public void onActionExecuted(View  view, StatusResponse statusResponse) {
+                        public void onActionExecuted(View view, StatusResponse statusResponse) {
                             Toast.makeText(context.getApplicationContext(), statusResponse.getMessaggio(), Toast.LENGTH_SHORT).show();
 
-                            if(statusResponse.isDone()){
-                               view.setVisibility(View.INVISIBLE);
-                            }else{
+                            if (statusResponse.isDone()) {
+                                context.finish();
+                                context.startActivity(context.getIntent());
+                            } else {
                                 view.setEnabled(true);
                             }
                         }
@@ -104,7 +114,13 @@ public class PrestitiListAdapter extends ArrayAdapter<Prestito> {
         return rowView;
     }
 
-    ;
+    public ImageLoaderTask getImageLoader() {
+        return imageLoader;
+    }
+
+    public void setImageLoader(ImageLoaderTask imageLoader) {
+        this.imageLoader = imageLoader;
+    }
 
     public int getCount() {
         return urls.length;

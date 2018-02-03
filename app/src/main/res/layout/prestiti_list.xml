@@ -22,15 +22,17 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/prestito_row_utente"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="6dp"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/prestiti_list_label_utente"
                     android:layout_width="124dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="6dp"
                     android:layout_weight="1"
                     android:text="Utente"
                     android:textColor="#212529"
@@ -45,7 +47,7 @@
                     android:id="@+id/prestiti_list_utente"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="6dp"
                     android:layout_weight="1"
                     android:text="Pippo" />
             </LinearLayout>
@@ -53,13 +55,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="6dp"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/prestiti_list_label_data_prestito"
                     android:layout_width="124dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="6dp"
                     android:layout_weight="1"
                     android:text="Prestato il"
                     android:textColor="#212529"
@@ -75,7 +78,7 @@
                     android:id="@+id/prestiti_list_data_prestito"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="6dp"
                     android:layout_weight="1"
                     android:text="10/10/2017" />
             </LinearLayout>
@@ -83,13 +86,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="6dp"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/prestiti_list_label_data_restituzione"
                     android:layout_width="124dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="6dp"
                     android:layout_weight="1"
                     android:text="Restituito il"
                     android:textColor="#212529"
@@ -104,7 +108,7 @@
                     android:id="@+id/prestiti_list_data_restituzione"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="6dp"
                     android:layout_weight="1"
                     android:text="11/11/2017" />
             </LinearLayout>
@@ -112,13 +116,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="12dp"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/prestiti_list_label_stato"
                     android:layout_width="124dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="6dp"
                     android:layout_weight="1"
                     android:text="Stato"
                     android:textColor="#212529"
@@ -133,7 +138,7 @@
                     android:id="@+id/prestiti_list_stato"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="6dp"
                     android:layout_weight="1"
                     android:text="Restituito" />
             </LinearLayout>

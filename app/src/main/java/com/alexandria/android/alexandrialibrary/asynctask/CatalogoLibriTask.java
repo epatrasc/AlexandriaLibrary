@@ -29,13 +29,12 @@ public class CatalogoLibriTask extends AsyncTask<Void, Void, List<LibroAction>> 
 
     @Override
     protected void onPostExecute(final List<LibroAction> libriAction) {
-        activity.showProgress(false);
-
         if (libriAction != null && libriAction.size() > 0) {
             activity.updateBookView(new BookListAdapter(activity, libriAction));
         } else {
             onCancelled();
         }
+        activity.showProgress(false);
     }
 
     @Override

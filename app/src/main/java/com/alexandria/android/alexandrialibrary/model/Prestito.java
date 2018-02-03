@@ -4,7 +4,10 @@ import java.sql.Date;
 
 public class Prestito {
 	private int idUtente;
+	private String nomeUtente;
 	private int idLibro;
+	private String titoloLibro;
+	private String urlImageLibro;
 	private Date dataPrestito;
 	private Date dataRestituzione;
 	private boolean restituito;
@@ -15,7 +18,7 @@ public class Prestito {
 	public Prestito(int idLibro) {
 		this.idLibro = idLibro;
 	}
-	
+
 	public Prestito(int idUtente, int idLibro) {
 		this.idUtente = idUtente;
 		this.idLibro = idLibro;
@@ -59,5 +62,29 @@ public class Prestito {
 
 	public void setRestituito(boolean restituito) {
 		this.restituito = restituito;
+	}
+
+	public String getNomeUtente() {
+		return nomeUtente;
+	}
+
+	public void setNomeUtente(String nomeUtente) {
+		this.nomeUtente = nomeUtente;
+	}
+
+	public String getTitoloLibro() {
+		return titoloLibro;
+	}
+
+	public void setTitoloLibro(String titoloLibro) {
+		this.titoloLibro = titoloLibro;
+	}
+
+	public String getUrlImageLibro() {
+		return urlImageLibro;
+	}
+
+	public void setUrlImageLibro(String urlImageLibro) {
+		this.urlImageLibro = urlImageLibro;
 	}
 }
