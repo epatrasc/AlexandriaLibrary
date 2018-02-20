@@ -2,10 +2,10 @@
     <!-- Strings configuration upstream -->
     <string name="upstream_name">Alexandria</string>
     <string name="host_protocol">http</string>
-    <string name="host_addres">192.168.1.12</string>
+    <string name="host_addres">192.168.1.96</string>
     <string name="host_name">Alexandria</string>
     <string name="host_port">8080</string>
-    <string name="upstream_base_url">http://192.168.1.12:8080/Alexandria</string>
+    <string name="upstream_base_url">http://192.168.1.960:8080/Alexandria</string>
     <string name="upstream_login_path">/login</string>
     <string name="upstream_logout_path">/logout</string>
 
