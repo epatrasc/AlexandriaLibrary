@@ -177,7 +177,7 @@ public class BookDetailActivity extends AppCompatActivity {
 
         actionButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                if (session.isAdministrator()) {
+                if (session.isAdministrator() && actionButton.getTag().equals(LibroAction.PRESTA)) {
                     Intent intent = new Intent(getApplicationContext(), AskUserActivity.class);
                     intent.putExtra("libroAction", new Gson().toJson(libroAction));
                     startActivity(intent);
