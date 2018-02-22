@@ -77,7 +77,7 @@ public class BookDetailActivity extends AppCompatActivity {
 
     private void executeAction(int idUtente) {
 
-        String action = libroAction.getAction();
+        String action = (String) actionButton.getTag();
         ActionTask task = new ActionTask(actionButton, libroAction.getLibro().getId(), idUtente);
 
         task.setOnActionExecuted(new BookListListener() {
@@ -87,7 +87,7 @@ public class BookDetailActivity extends AppCompatActivity {
 
                 if (statusResponse.isDone()) {
                     String newAction = view.getTag().equals(LibroAction.PRESTA) ? LibroAction.RESTITUISCI : LibroAction.PRESTA;
-                    view.setTag(newAction);
+                    actionButton.setTag(newAction);
                     actionButton.setText(newAction);
                 }
                 view.setEnabled(true);

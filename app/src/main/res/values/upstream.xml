@@ -5,7 +5,7 @@
     <string name="host_addres">192.168.1.96</string>
     <string name="host_name">Alexandria</string>
     <string name="host_port">8080</string>
-    <string name="upstream_base_url">http://192.168.1.960:8080/Alexandria</string>
+    <string name="upstream_base_url">http://192.168.1.96:8080/Alexandria</string>
     <string name="upstream_login_path">/login</string>
     <string name="upstream_logout_path">/logout</string>
 
